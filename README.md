@@ -6,5 +6,7 @@ Site vitrine Coco Loc 971 pour la location de voitures en Guadeloupe et les serv
 
 La page propose deux modes de reservation :
 
-- Reservation rapide pour une demande directe via WhatsApp.
+- Demande rapide pour une disponibilite, un depannage ou une demande directe via WhatsApp.
 - Reservation complete avec vehicule, dates, heures, lieux, options, paiement, confirmation et recapitulatif.
+
+Derniere synchro demandee pour Lovable : parcours reservation poli et libelles a jour.
