@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -11,19 +11,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import {
+  BadgeCheck,
+  CalendarDays,
   Car,
+  CarFront,
+  Check,
+  ClipboardCheck,
+  Clock,
+  CreditCard,
+  Gauge,
   Instagram,
-  Phone,
   Mail,
   MapPin,
+  MessageCircle,
+  Phone,
+  Send,
+  Settings2,
   ShieldCheck,
-  Truck,
-  Gauge,
   Sparkles,
-  Check,
   Sun,
+  Truck,
+  User,
 } from "lucide-react";
 import heroImg from "@/assets/hero-tropical.jpg";
 import plaqueImg from "@/assets/plaque-4d.jpg";
@@ -50,10 +67,10 @@ export const Route = createFileRoute("/")({
 });
 
 const cars = [
-  { name: "Fiat Panda / Twingo 3", tier: "Économique", seats: 4, emoji: "🚗" },
-  { name: "Clio 4", tier: "Compacte", seats: 5, emoji: "🚙" },
-  { name: "Clio 5 Automatique", tier: "Confort auto", seats: 5, emoji: "🚘" },
-  { name: "Captur", tier: "SUV familial", seats: 5, emoji: "🚐" },
+  { name: "Fiat Panda / Twingo 3", tier: "Économique", seats: 4, icon: Car, dailyRate: 35 },
+  { name: "Clio 4", tier: "Compacte", seats: 5, icon: CarFront, dailyRate: 42 },
+  { name: "Clio 5 Automatique", tier: "Confort auto", seats: 5, icon: Settings2, dailyRate: 48 },
+  { name: "Captur", tier: "SUV familial", seats: 5, icon: BadgeCheck, dailyRate: 55 },
 ];
 
 const rentalPacks = [
@@ -98,8 +115,56 @@ const advantages = [
   { icon: Truck, title: "Livraison à domicile", desc: "Aéroport, hôtel, où vous voulez." },
 ];
 
+const detailedOptions = [
+  { key: "airportWelcome", label: "Accueil aéroport", desc: "Rendez-vous à l'arrivée", price: 0 },
+  { key: "homeDelivery", label: "Livraison à domicile", desc: "Adresse à confirmer", price: 10 },
+  { key: "childSeat", label: "Siège enfant", desc: "Selon disponibilité", price: 5 },
+  { key: "extraDriver", label: "Conducteur additionnel", desc: "Pièce d'identité demandée", price: 10 },
+  { key: "plaqueService", label: "Ajouter une demande plaques", desc: "4D ou 3D Topaze", price: 0 },
+] as const;
+
+type QuickForm = {
+  name: string;
+  phone: string;
+  service: string;
+  date: string;
+  message: string;
+};
+
+type DetailedForm = {
+  pickupDate: string;
+  returnDate: string;
+  pickupTime: string;
+  returnTime: string;
+  vehicle: string;
+  pickupLocation: string;
+  returnLocation: string;
+  driverName: string;
+  driverPhone: string;
+  driverEmail: string;
+  payment: string;
+  confirmation: string;
+  note: string;
+};
+
+type DetailOptionKey = (typeof detailedOptions)[number]["key"];
+
+function getRentalDays(start: string, end: string) {
+  if (!start || !end) return 0;
+
+  const startDate = new Date(`${start}T00:00:00`);
+  const endDate = new Date(`${end}T00:00:00`);
+  const diff = Math.ceil((endDate.getTime() - startDate.getTime()) / 86_400_000);
+
+  return Number.isFinite(diff) && diff > 0 ? diff : 1;
+}
+
+function sendWhatsApp(text: string) {
+  window.open(`https://wa.me/590691278794?text=${encodeURIComponent(text)}`, "_blank");
+}
+
 function Home() {
-  const [form, setForm] = useState({
+  const [quickForm, setQuickForm] = useState<QuickForm>({
     name: "",
     phone: "",
     service: "",
@@ -107,15 +172,107 @@ function Home() {
     message: "",
   });
 
-  const onSubmit = (e: React.FormEvent) => {
+  const [detailedForm, setDetailedForm] = useState<DetailedForm>({
+    pickupDate: "",
+    returnDate: "",
+    pickupTime: "09:00",
+    returnTime: "09:00",
+    vehicle: "Clio 4",
+    pickupLocation: "Aéroport Pôle Caraïbes",
+    returnLocation: "Même lieu",
+    driverName: "",
+    driverPhone: "",
+    driverEmail: "",
+    payment: "Paiement à la récupération",
+    confirmation: "Confirmation WhatsApp",
+    note: "",
+  });
+
+  const [selectedOptions, setSelectedOptions] = useState<Record<DetailOptionKey, boolean>>({
+    airportWelcome: true,
+    homeDelivery: false,
+    childSeat: false,
+    extraDriver: false,
+    plaqueService: false,
+  });
+
+  const selectedCar = cars.find((car) => car.name === detailedForm.vehicle) ?? cars[1];
+  const rentalDays = getRentalDays(detailedForm.pickupDate, detailedForm.returnDate);
+  const optionTotal = detailedOptions.reduce(
+    (sum, option) => sum + (selectedOptions[option.key] ? option.price : 0),
+    0,
+  );
+  const estimatedTotal = rentalDays > 0 ? rentalDays * selectedCar.dailyRate + optionTotal : 0;
+
+  const setQuickField = (key: keyof QuickForm, value: string) => {
+    setQuickForm((current) => ({ ...current, [key]: value }));
+  };
+
+  const setDetailedField = (key: keyof DetailedForm, value: string) => {
+    setDetailedForm((current) => ({ ...current, [key]: value }));
+  };
+
+  const onQuickSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.phone || !form.service) {
+    if (!quickForm.name || !quickForm.phone || !quickForm.service) {
       toast.error("Merci de remplir nom, téléphone et service.");
       return;
     }
-    const text = `Bonjour Coco Loc 971,%0A%0ANom: ${form.name}%0ATéléphone: ${form.phone}%0AService: ${form.service}%0ADate: ${form.date}%0AMessage: ${form.message}`;
-    window.open(`https://wa.me/590691278794?text=${text}`, "_blank");
-    toast.success("Demande envoyée ! Nous vous recontactons rapidement.");
+
+    sendWhatsApp(
+      [
+        "Bonjour Coco Loc 971,",
+        "",
+        "Je souhaite faire une demande rapide.",
+        `Nom : ${quickForm.name}`,
+        `Téléphone : ${quickForm.phone}`,
+        `Service : ${quickForm.service}`,
+        `Date souhaitée : ${quickForm.date || "À préciser"}`,
+        `Message : ${quickForm.message || "Aucun message ajouté"}`,
+      ].join("\n"),
+    );
+    toast.success("Demande prête sur WhatsApp.");
+  };
+
+  const onDetailedSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (
+      !detailedForm.driverName ||
+      !detailedForm.driverPhone ||
+      !detailedForm.pickupDate ||
+      !detailedForm.returnDate ||
+      !detailedForm.vehicle
+    ) {
+      toast.error("Merci de compléter conducteur, téléphone, dates et véhicule.");
+      return;
+    }
+
+    const options = detailedOptions
+      .filter((option) => selectedOptions[option.key])
+      .map((option) => `${option.label}${option.price ? ` (+${option.price}€)` : ""}`)
+      .join(", ");
+
+    sendWhatsApp(
+      [
+        "Bonjour Coco Loc 971,",
+        "",
+        "Je souhaite réserver un véhicule.",
+        `Conducteur : ${detailedForm.driverName}`,
+        `Téléphone : ${detailedForm.driverPhone}`,
+        `Email : ${detailedForm.driverEmail || "Non renseigné"}`,
+        `Véhicule : ${detailedForm.vehicle}`,
+        `Départ : ${detailedForm.pickupDate} à ${detailedForm.pickupTime}`,
+        `Retour : ${detailedForm.returnDate} à ${detailedForm.returnTime}`,
+        `Lieu de récupération : ${detailedForm.pickupLocation}`,
+        `Lieu de retour : ${detailedForm.returnLocation}`,
+        `Options : ${options || "Aucune option"}`,
+        `Paiement : ${detailedForm.payment}`,
+        `Confirmation : ${detailedForm.confirmation}`,
+        `Estimation : ${rentalDays} jour(s), ${estimatedTotal}€`,
+        `Note : ${detailedForm.note || "Aucune note ajoutée"}`,
+      ].join("\n"),
+    );
+    toast.success("Réservation prête sur WhatsApp.");
   };
 
   return (
@@ -210,14 +367,16 @@ function Home() {
                 className="group relative overflow-hidden rounded-3xl border border-border bg-card p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
               >
                 <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-tropical opacity-10 transition group-hover:opacity-20" />
-                <div className="text-5xl">{c.emoji}</div>
+                <div className="grid h-14 w-14 place-items-center rounded-2xl bg-tropical text-white shadow-soft">
+                  <c.icon className="h-7 w-7" />
+                </div>
                 <div className="mt-4 text-xs font-semibold uppercase tracking-wider text-coral">
                   Catégorie {i + 1}
                 </div>
                 <h3 className="mt-1 font-display text-xl font-bold">{c.name}</h3>
                 <p className="text-sm text-muted-foreground">{c.tier}</p>
                 <div className="mt-4 flex items-center gap-3 text-sm text-muted-foreground">
-                  <Car className="h-4 w-4 text-ocean" />
+                  <User className="h-4 w-4 text-ocean" />
                   <span>{c.seats} places</span>
                 </div>
               </div>
@@ -351,12 +510,33 @@ function Home() {
 
       {/* RESERVATION */}
       <section id="reservation" className="py-24 px-4 sm:px-6 bg-muted/40">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.1fr_1fr]">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.35fr]">
           <div>
-            <SectionTitle eyebrow="Réservation" title="Réservez en 30 secondes" />
+            <SectionTitle eyebrow="Réservation" title="Deux façons de réserver" />
             <p className="mt-4 text-muted-foreground max-w-md">
-              Remplissez le formulaire, nous vous recontactons par WhatsApp pour confirmer votre véhicule et la livraison.
+              Choisissez une demande rapide pour aller droit au but, ou une réservation complète
+              avec dates, véhicule, options, paiement et mode de confirmation.
             </p>
+
+            <div className="mt-8 grid gap-4">
+              {[
+                { icon: MessageCircle, title: "Rapide", text: "Parfait pour une question, un dépannage ou une disponibilité." },
+                { icon: ClipboardCheck, title: "Complète", text: "Sélection du véhicule, du créneau, des options et du règlement." },
+                { icon: CreditCard, title: "Flexible", text: "Paiement au retrait, acompte ou paiement en ligne sécurisé." },
+              ].map((item) => (
+                <div key={item.title} className="rounded-3xl bg-card border border-border p-5 shadow-soft">
+                  <div className="flex items-start gap-4">
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-sunset text-white">
+                      <item.icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-display text-lg font-bold">{item.title}</h3>
+                      <p className="text-sm text-muted-foreground">{item.text}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
             <div className="mt-8 space-y-4">
               {[
@@ -370,75 +550,348 @@ function Home() {
                   href={c.href}
                   className="flex items-center gap-4 rounded-2xl bg-card border border-border p-4 shadow-soft transition hover:border-coral hover:-translate-y-0.5"
                 >
-                  <div className="grid h-11 w-11 place-items-center rounded-xl bg-sunset text-white">
+                  <div className="grid h-11 w-11 place-items-center rounded-xl bg-tropical text-white">
                     <c.icon className="h-5 w-5" />
                   </div>
                   <span className="font-semibold">{c.label}</span>
                 </a>
               ))}
             </div>
-
-            <div className="mt-8 rounded-2xl border-l-4 border-palm bg-palm/5 p-4">
-              <div className="flex items-start gap-3">
-                <Check className="mt-0.5 h-5 w-5 text-palm" />
-                <p className="text-sm">
-                  <strong>Réponse rapide</strong> — disponible 7j/7 pour réservation et dépannage local.
-                </p>
-              </div>
-            </div>
           </div>
 
-          <form
-            onSubmit={onSubmit}
-            className="rounded-3xl bg-card border border-border p-6 sm:p-8 shadow-glow"
-          >
-            <div className="grid gap-4">
-              <div>
-                <Label htmlFor="name">Nom complet *</Label>
-                <Input id="name" required maxLength={80} value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="mt-1.5 h-12" placeholder="Jean Dupont" />
-              </div>
-              <div>
-                <Label htmlFor="phone">Téléphone *</Label>
-                <Input id="phone" type="tel" required maxLength={20} value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="mt-1.5 h-12" placeholder="06 90 ..." />
-              </div>
-              <div>
-                <Label>Service *</Label>
-                <Select value={form.service} onValueChange={(v) => setForm({ ...form, service: v })}>
-                  <SelectTrigger className="mt-1.5 h-12">
-                    <SelectValue placeholder="Choisissez un service" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Location Panda/Twingo">Location Panda / Twingo</SelectItem>
-                    <SelectItem value="Location Clio 4">Location Clio 4</SelectItem>
-                    <SelectItem value="Location Clio 5 auto">Location Clio 5 auto</SelectItem>
-                    <SelectItem value="Location Captur">Location Captur</SelectItem>
-                    <SelectItem value="Pack dépannage">Pack dépannage local</SelectItem>
-                    <SelectItem value="Plaques 4D">Plaques 4D</SelectItem>
-                    <SelectItem value="Plaques 3D Topaze">Plaques 3D Topaze</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="date">Date souhaitée</Label>
-                <Input id="date" type="date" value={form.date}
-                  onChange={(e) => setForm({ ...form, date: e.target.value })}
-                  className="mt-1.5 h-12" />
-              </div>
-              <div>
-                <Label htmlFor="msg">Message</Label>
-                <Textarea id="msg" rows={4} maxLength={500} value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="mt-1.5" placeholder="Lieu de livraison, durée, options..." />
-              </div>
-              <Button type="submit" size="lg" className="h-14 bg-coral text-white hover:bg-coral/90 shadow-glow text-base font-semibold">
-                Envoyer ma demande →
-              </Button>
-            </div>
-          </form>
+          <Tabs defaultValue="quick" className="rounded-3xl bg-card border border-border p-4 shadow-glow sm:p-6">
+            <TabsList className="grid h-auto w-full grid-cols-2 rounded-2xl bg-muted p-1">
+              <TabsTrigger value="quick" className="rounded-xl py-3 text-sm font-bold">
+                Réservation rapide
+              </TabsTrigger>
+              <TabsTrigger value="complete" className="rounded-xl py-3 text-sm font-bold">
+                Réservation complète
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="quick" className="mt-6">
+              <form onSubmit={onQuickSubmit} className="grid gap-4">
+                <div className="rounded-2xl border-l-4 border-palm bg-palm/5 p-4">
+                  <div className="flex items-start gap-3">
+                    <Check className="mt-0.5 h-5 w-5 text-palm" />
+                    <p className="text-sm">
+                      <strong>Réponse rapide</strong> — disponible 7j/7 pour réservation et dépannage local.
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="quick-name">Nom complet *</Label>
+                  <Input
+                    id="quick-name"
+                    required
+                    maxLength={80}
+                    value={quickForm.name}
+                    onChange={(e) => setQuickField("name", e.target.value)}
+                    className="mt-1.5 h-12"
+                    placeholder="Jean Dupont"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="quick-phone">Téléphone *</Label>
+                  <Input
+                    id="quick-phone"
+                    type="tel"
+                    required
+                    maxLength={20}
+                    value={quickForm.phone}
+                    onChange={(e) => setQuickField("phone", e.target.value)}
+                    className="mt-1.5 h-12"
+                    placeholder="06 90 ..."
+                  />
+                </div>
+                <div>
+                  <Label>Service *</Label>
+                  <Select value={quickForm.service} onValueChange={(v) => setQuickField("service", v)}>
+                    <SelectTrigger className="mt-1.5 h-12">
+                      <SelectValue placeholder="Choisissez un service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Location Panda/Twingo">Location Panda / Twingo</SelectItem>
+                      <SelectItem value="Location Clio 4">Location Clio 4</SelectItem>
+                      <SelectItem value="Location Clio 5 auto">Location Clio 5 auto</SelectItem>
+                      <SelectItem value="Location Captur">Location Captur</SelectItem>
+                      <SelectItem value="Pack dépannage">Pack dépannage local</SelectItem>
+                      <SelectItem value="Plaques 4D">Plaques 4D</SelectItem>
+                      <SelectItem value="Plaques 3D Topaze">Plaques 3D Topaze</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="quick-date">Date souhaitée</Label>
+                  <Input
+                    id="quick-date"
+                    type="date"
+                    value={quickForm.date}
+                    onChange={(e) => setQuickField("date", e.target.value)}
+                    className="mt-1.5 h-12"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="quick-msg">Message</Label>
+                  <Textarea
+                    id="quick-msg"
+                    rows={4}
+                    maxLength={500}
+                    value={quickForm.message}
+                    onChange={(e) => setQuickField("message", e.target.value)}
+                    className="mt-1.5"
+                    placeholder="Lieu de livraison, durée, options..."
+                  />
+                </div>
+                <Button type="submit" size="lg" className="h-14 bg-coral text-white hover:bg-coral/90 shadow-glow text-base font-semibold">
+                  <Send className="mr-2 h-5 w-5" />
+                  Envoyer ma demande
+                </Button>
+              </form>
+            </TabsContent>
+
+            <TabsContent value="complete" className="mt-6">
+              <form onSubmit={onDetailedSubmit} className="grid gap-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label>Véhicule *</Label>
+                    <Select value={detailedForm.vehicle} onValueChange={(v) => setDetailedField("vehicle", v)}>
+                      <SelectTrigger className="mt-1.5 h-12">
+                        <SelectValue placeholder="Sélectionner une voiture" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {cars.map((car) => (
+                          <SelectItem key={car.name} value={car.name}>
+                            {car.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>Mode de paiement</Label>
+                    <Select value={detailedForm.payment} onValueChange={(v) => setDetailedField("payment", v)}>
+                      <SelectTrigger className="mt-1.5 h-12">
+                        <SelectValue placeholder="Choisir le paiement" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Paiement à la récupération">Paiement à la récupération</SelectItem>
+                        <SelectItem value="Acompte à la confirmation">Acompte à la confirmation</SelectItem>
+                        <SelectItem value="Paiement en ligne sécurisé">Paiement en ligne sécurisé</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-4">
+                  <div className="md:col-span-2">
+                    <Label htmlFor="pickup-date">Départ *</Label>
+                    <div className="mt-1.5 grid gap-2 sm:grid-cols-[1fr_auto]">
+                      <div className="relative">
+                        <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          id="pickup-date"
+                          type="date"
+                          required
+                          value={detailedForm.pickupDate}
+                          onChange={(e) => setDetailedField("pickupDate", e.target.value)}
+                          className="h-12 pl-10"
+                        />
+                      </div>
+                      <div className="relative sm:w-28">
+                        <Clock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          type="time"
+                          value={detailedForm.pickupTime}
+                          onChange={(e) => setDetailedField("pickupTime", e.target.value)}
+                          className="h-12 pl-10"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="return-date">Retour *</Label>
+                    <div className="mt-1.5 grid gap-2 sm:grid-cols-[1fr_auto]">
+                      <div className="relative">
+                        <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          id="return-date"
+                          type="date"
+                          required
+                          value={detailedForm.returnDate}
+                          onChange={(e) => setDetailedField("returnDate", e.target.value)}
+                          className="h-12 pl-10"
+                        />
+                      </div>
+                      <div className="relative sm:w-28">
+                        <Clock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          type="time"
+                          value={detailedForm.returnTime}
+                          onChange={(e) => setDetailedField("returnTime", e.target.value)}
+                          className="h-12 pl-10"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label>Lieu de récupération</Label>
+                    <Select value={detailedForm.pickupLocation} onValueChange={(v) => setDetailedField("pickupLocation", v)}>
+                      <SelectTrigger className="mt-1.5 h-12">
+                        <SelectValue placeholder="Choisir un lieu" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Aéroport Pôle Caraïbes">Aéroport Pôle Caraïbes</SelectItem>
+                        <SelectItem value="Pointe-à-Pitre">Pointe-à-Pitre</SelectItem>
+                        <SelectItem value="Baie-Mahault">Baie-Mahault</SelectItem>
+                        <SelectItem value="Le Gosier">Le Gosier</SelectItem>
+                        <SelectItem value="Sainte-Anne">Sainte-Anne</SelectItem>
+                        <SelectItem value="Autre lieu à préciser">Autre lieu à préciser</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>Lieu de retour</Label>
+                    <Select value={detailedForm.returnLocation} onValueChange={(v) => setDetailedField("returnLocation", v)}>
+                      <SelectTrigger className="mt-1.5 h-12">
+                        <SelectValue placeholder="Choisir un lieu" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Même lieu">Même lieu</SelectItem>
+                        <SelectItem value="Aéroport Pôle Caraïbes">Aéroport Pôle Caraïbes</SelectItem>
+                        <SelectItem value="Pointe-à-Pitre">Pointe-à-Pitre</SelectItem>
+                        <SelectItem value="Autre lieu à préciser">Autre lieu à préciser</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div>
+                  <Label>Options</Label>
+                  <div className="mt-2 grid gap-3 sm:grid-cols-2">
+                    {detailedOptions.map((option) => (
+                      <label
+                        key={option.key}
+                        className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border bg-muted/40 p-4 transition hover:border-coral"
+                      >
+                        <Checkbox
+                          checked={selectedOptions[option.key]}
+                          onCheckedChange={(checked) =>
+                            setSelectedOptions((current) => ({
+                              ...current,
+                              [option.key]: Boolean(checked),
+                            }))
+                          }
+                          className="mt-1"
+                        />
+                        <span>
+                          <span className="block text-sm font-bold">{option.label}</span>
+                          <span className="block text-xs text-muted-foreground">
+                            {option.desc}
+                            {option.price ? ` · +${option.price}€` : " · inclus"}
+                          </span>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div>
+                    <Label htmlFor="driver-name">Conducteur *</Label>
+                    <Input
+                      id="driver-name"
+                      required
+                      value={detailedForm.driverName}
+                      onChange={(e) => setDetailedField("driverName", e.target.value)}
+                      className="mt-1.5 h-12"
+                      placeholder="Nom complet"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="driver-phone">Téléphone *</Label>
+                    <Input
+                      id="driver-phone"
+                      type="tel"
+                      required
+                      value={detailedForm.driverPhone}
+                      onChange={(e) => setDetailedField("driverPhone", e.target.value)}
+                      className="mt-1.5 h-12"
+                      placeholder="06 90 ..."
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="driver-email">Email</Label>
+                    <Input
+                      id="driver-email"
+                      type="email"
+                      value={detailedForm.driverEmail}
+                      onChange={(e) => setDetailedField("driverEmail", e.target.value)}
+                      className="mt-1.5 h-12"
+                      placeholder="email@exemple.fr"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-[1fr_1fr]">
+                  <div>
+                    <Label>Mode de confirmation</Label>
+                    <Select value={detailedForm.confirmation} onValueChange={(v) => setDetailedField("confirmation", v)}>
+                      <SelectTrigger className="mt-1.5 h-12">
+                        <SelectValue placeholder="Choisir la confirmation" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Confirmation WhatsApp">Confirmation WhatsApp</SelectItem>
+                        <SelectItem value="Confirmation téléphone">Confirmation téléphone</SelectItem>
+                        <SelectItem value="Confirmation email">Confirmation email</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="detailed-note">Informations complémentaires</Label>
+                    <Input
+                      id="detailed-note"
+                      value={detailedForm.note}
+                      onChange={(e) => setDetailedField("note", e.target.value)}
+                      className="mt-1.5 h-12"
+                      placeholder="Numéro de vol, adresse, besoin précis..."
+                    />
+                  </div>
+                </div>
+
+                <div className="rounded-3xl border border-coral/30 bg-coral/5 p-5">
+                  <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
+                    <div>
+                      <div className="flex items-center gap-2 text-sm font-bold text-coral">
+                        <ClipboardCheck className="h-4 w-4" />
+                        Résumé de réservation
+                      </div>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        {detailedForm.vehicle} · {rentalDays || "Dates à choisir"} jour(s) · {detailedForm.pickupLocation}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {detailedForm.payment} · {detailedForm.confirmation}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl bg-card border border-border px-5 py-4 text-center shadow-soft">
+                      <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Estimation</div>
+                      <div className="font-display text-3xl font-black text-coral">
+                        {estimatedTotal ? `${estimatedTotal}€` : "—"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <Button type="submit" size="lg" className="h-14 bg-coral text-white hover:bg-coral/90 shadow-glow text-base font-semibold">
+                  <Send className="mr-2 h-5 w-5" />
+                  Valider la réservation
+                </Button>
+              </form>
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
 
