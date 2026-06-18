@@ -1,24 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import { createFileRoute } from '@tanstack/react-router';
+import { type FormEvent, useState } from 'react';
 import {
   BadgeCheck,
   CalendarDays,
@@ -41,154 +22,111 @@ import {
   Sun,
   Truck,
   User,
-} from "lucide-react";
-import heroImg from "@/assets/hero-tropical.jpg";
-import plaqueImg from "@/assets/plaque-4d.jpg";
+} from 'lucide-react';
+import heroImg from '@/assets/hero-tropical.jpg';
+import plaqueImg from '@/assets/plaque-4d.jpg';
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   head: () => ({
     meta: [
-      { title: "Coco Loc 971 — Location voiture & plaques 4D/3D en Guadeloupe" },
+      { title: 'Coco Loc 971 — Location voiture & plaques 4D/3D en Guadeloupe' },
       {
-        name: "description",
+        name: 'description',
         content:
-          "Location de voitures économiques en Guadeloupe et pose de plaques d'immatriculation 4D et 3D Topaze. Réservez en ligne, livraison à domicile.",
+          'Location de voitures en Guadeloupe, packs dépannage et pose de plaques 4D / 3D Topaze. Demande rapide ou réservation complète par WhatsApp.',
       },
-      { property: "og:title", content: "Coco Loc 971 — Le soleil, les clés, partez !" },
+      { property: 'og:title', content: 'Coco Loc 971 — Le soleil, les clés, partez !' },
       {
-        property: "og:description",
+        property: 'og:description',
         content:
-          "Location voiture & plaques d'immatriculation en Guadeloupe. Tarifs clairs, assurance incluse, kilométrage illimité.",
+          'Voitures prêtes à partir, tarifs clairs, kilométrage illimité, livraison pratique et plaques homologuées.',
       },
-      { property: "og:image", content: heroImg },
+      { property: 'og:image', content: heroImg },
     ],
   }),
   component: Home,
 });
 
 const cars = [
-  { name: "Fiat Panda / Twingo 3", tier: "Économique", seats: 4, icon: Car, dailyRate: 35 },
-  { name: "Clio 4", tier: "Compacte", seats: 5, icon: CarFront, dailyRate: 42 },
-  { name: "Clio 5 Automatique", tier: "Confort auto", seats: 5, icon: Settings2, dailyRate: 48 },
-  { name: "Captur", tier: "SUV familial", seats: 5, icon: BadgeCheck, dailyRate: 55 },
+  { name: 'Fiat Panda / Twingo 3', tier: 'Économique', seats: 4, icon: Car, prices: [60, 70, 130, 280] },
+  { name: 'Clio 4', tier: 'Compacte', seats: 5, icon: CarFront, prices: [75, 85, 150, 300] },
+  { name: 'Clio 5 Automatique', tier: 'Confort auto', seats: 5, icon: Settings2, prices: [85, 95, 170, 330] },
+  { name: 'Captur', tier: 'SUV familial', seats: 5, icon: BadgeCheck, prices: [95, 105, 190, 360] },
 ];
 
-const rentalPacks = [
-  {
-    name: "Week-end",
-    sub: "Idéal escapade",
-    prices: [60, 75, 85, 95],
-    accent: "bg-sun",
-  },
-  {
-    name: "3 jours",
-    sub: "Court séjour",
-    prices: [70, 85, 95, 105],
-    accent: "bg-palm",
-  },
-  {
-    name: "7 jours",
-    sub: "Une semaine au soleil",
-    prices: [130, 150, 170, 190],
-    accent: "bg-ocean",
-    popular: true,
-  },
-  {
-    name: "14 jours",
-    sub: "Long séjour",
-    prices: [280, 300, 330, 360],
-    accent: "bg-coral",
-  },
+const packs = [
+  { name: 'Week-end', sub: 'Vendredi à dimanche', days: 2, color: 'bg-sun' },
+  { name: '3 jours', sub: 'Séjour court', days: 3, color: 'bg-palm' },
+  { name: '7 jours', sub: 'La formule la plus demandée', days: 7, color: 'bg-ocean', popular: true },
+  { name: '14 jours', sub: 'Vacances longues', days: 14, color: 'bg-coral' },
 ];
 
 const plaques = [
-  { name: "Pack 2 plaques 4D", price: 55, badge: "Le + demandé" },
-  { name: "Pack 2 plaques 3D Topaze", price: 65, badge: "Premium" },
-  { name: "Plaque 4D simple", price: 29 },
-  { name: "Plaque 3D Topaze simple", price: 35 },
+  { name: 'Pack 2 plaques 4D', price: 55, badge: 'Le + demandé' },
+  { name: 'Pack 2 plaques 3D Topaze', price: 65, badge: 'Premium' },
+  { name: 'Plaque 4D simple', price: 29 },
+  { name: 'Plaque 3D Topaze simple', price: 35 },
 ];
 
 const advantages = [
-  { icon: Sparkles, title: "Voitures récentes", desc: "Flotte entretenue et propre." },
-  { icon: ShieldCheck, title: "Assurance incluse", desc: "Roulez l'esprit léger." },
-  { icon: Gauge, title: "Kilométrage illimité", desc: "Explorez toute l'île." },
-  { icon: Truck, title: "Livraison à domicile", desc: "Aéroport, hôtel, où vous voulez." },
+  { icon: Sparkles, title: 'Voitures récentes', desc: 'Flotte propre, entretenue et prête au départ.' },
+  { icon: ShieldCheck, title: 'Assurance incluse', desc: 'Des formules claires pour rouler léger.' },
+  { icon: Gauge, title: 'Kilométrage illimité', desc: 'Profitez de toute la Guadeloupe sans compter.' },
+  { icon: Truck, title: 'Livraison pratique', desc: 'Aéroport, hôtel, domicile ou point de rendez-vous.' },
 ];
 
-const detailedOptions = [
-  { key: "airportWelcome", label: "Accueil aéroport", desc: "Rendez-vous à l'arrivée", price: 0 },
-  { key: "homeDelivery", label: "Livraison à domicile", desc: "Adresse à confirmer", price: 10 },
-  { key: "childSeat", label: "Siège enfant", desc: "Selon disponibilité", price: 5 },
-  { key: "extraDriver", label: "Conducteur additionnel", desc: "Pièce d'identité demandée", price: 10 },
-  { key: "plaqueService", label: "Ajouter une demande plaques", desc: "4D ou 3D Topaze", price: 0 },
-] as const;
+const options = [
+  { key: 'airportWelcome', label: 'Accueil aéroport', desc: 'Rendez-vous à l’arrivée', price: 0 },
+  { key: 'homeDelivery', label: 'Livraison dédiée', desc: 'Adresse à confirmer', price: 10 },
+  { key: 'childSeat', label: 'Siège enfant', desc: 'Selon disponibilité', price: 5 },
+  { key: 'extraDriver', label: 'Conducteur additionnel', desc: 'Pièce d’identité demandée', price: 10 },
+  { key: 'plaqueService', label: 'Ajouter une demande plaques', desc: '4D ou 3D Topaze', price: 0 },
+];
 
-type QuickForm = {
-  name: string;
-  phone: string;
-  service: string;
-  date: string;
-  message: string;
-};
+const field =
+  'mt-1.5 h-12 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none transition focus:border-coral focus:ring-2 focus:ring-coral/20';
+const area =
+  'mt-1.5 min-h-28 w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none transition focus:border-coral focus:ring-2 focus:ring-coral/20';
+const card = 'rounded-3xl border border-border bg-card shadow-soft';
 
-type DetailedForm = {
-  pickupDate: string;
-  returnDate: string;
-  pickupTime: string;
-  returnTime: string;
-  vehicle: string;
-  pickupLocation: string;
-  returnLocation: string;
-  driverName: string;
-  driverPhone: string;
-  driverEmail: string;
-  payment: string;
-  confirmation: string;
-  note: string;
-};
-
-type DetailOptionKey = (typeof detailedOptions)[number]["key"];
-
-function getRentalDays(start: string, end: string) {
+function getDays(start: string, end: string) {
   if (!start || !end) return 0;
-
-  const startDate = new Date(`${start}T00:00:00`);
-  const endDate = new Date(`${end}T00:00:00`);
-  const diff = Math.ceil((endDate.getTime() - startDate.getTime()) / 86_400_000);
-
+  const diff = Math.ceil((new Date(`${end}T00:00:00`).getTime() - new Date(`${start}T00:00:00`).getTime()) / 86400000);
   return Number.isFinite(diff) && diff > 0 ? diff : 1;
 }
 
-function sendWhatsApp(text: string) {
-  window.open(`https://wa.me/590691278794?text=${encodeURIComponent(text)}`, "_blank");
+function getPack(days: number) {
+  if (!days) return null;
+  if (days <= 2) return { ...packs[0], index: 0 };
+  if (days <= 3) return { ...packs[1], index: 1 };
+  if (days <= 7) return { ...packs[2], index: 2 };
+  if (days <= 14) return { ...packs[3], index: 3 };
+  return null;
+}
+
+function sendWhatsApp(lines: string[]) {
+  window.open(`https://wa.me/590691278794?text=${encodeURIComponent(lines.join(String.fromCharCode(10)))}`, '_blank');
 }
 
 function Home() {
-  const [quickForm, setQuickForm] = useState<QuickForm>({
-    name: "",
-    phone: "",
-    service: "",
-    date: "",
-    message: "",
+  const [mode, setMode] = useState<'quick' | 'complete'>('quick');
+  const [quick, setQuick] = useState({ name: '', phone: '', service: '', date: '', message: '' });
+  const [booking, setBooking] = useState({
+    vehicle: 'Clio 4',
+    payment: 'Paiement à la récupération',
+    pickupDate: '',
+    pickupTime: '09:00',
+    returnDate: '',
+    returnTime: '09:00',
+    pickupLocation: 'Aéroport Pôle Caraïbes',
+    returnLocation: 'Même lieu',
+    driverName: '',
+    driverPhone: '',
+    driverEmail: '',
+    confirmation: 'Confirmation WhatsApp',
+    note: '',
   });
-
-  const [detailedForm, setDetailedForm] = useState<DetailedForm>({
-    pickupDate: "",
-    returnDate: "",
-    pickupTime: "09:00",
-    returnTime: "09:00",
-    vehicle: "Clio 4",
-    pickupLocation: "Aéroport Pôle Caraïbes",
-    returnLocation: "Même lieu",
-    driverName: "",
-    driverPhone: "",
-    driverEmail: "",
-    payment: "Paiement à la récupération",
-    confirmation: "Confirmation WhatsApp",
-    note: "",
-  });
-
-  const [selectedOptions, setSelectedOptions] = useState<Record<DetailOptionKey, boolean>>({
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, boolean>>({
     airportWelcome: true,
     homeDelivery: false,
     childSeat: false,
@@ -196,159 +134,116 @@ function Home() {
     plaqueService: false,
   });
 
-  const selectedCar = cars.find((car) => car.name === detailedForm.vehicle) ?? cars[1];
-  const rentalDays = getRentalDays(detailedForm.pickupDate, detailedForm.returnDate);
-  const optionTotal = detailedOptions.reduce(
-    (sum, option) => sum + (selectedOptions[option.key] ? option.price : 0),
-    0,
-  );
-  const estimatedTotal = rentalDays > 0 ? rentalDays * selectedCar.dailyRate + optionTotal : 0;
+  const selectedCar = cars.find((car) => car.name === booking.vehicle) ?? cars[1];
+  const days = getDays(booking.pickupDate, booking.returnDate);
+  const pack = getPack(days);
+  const optionsTotal = options.reduce((sum, option) => sum + (selectedOptions[option.key] ? option.price : 0), 0);
+  const total = pack ? selectedCar.prices[pack.index] + optionsTotal : 0;
+  const packLabel = pack ? `Pack ${pack.name}` : days > 14 ? 'Long séjour sur mesure' : 'Pack calculé après dates';
+  const durationLabel = days ? `${days} jour${days > 1 ? 's' : ''}` : 'dates à choisir';
+  const selectedCount = options.filter((option) => selectedOptions[option.key]).length;
 
-  const setQuickField = (key: keyof QuickForm, value: string) => {
-    setQuickForm((current) => ({ ...current, [key]: value }));
-  };
+  const setQuickField = (key: keyof typeof quick, value: string) => setQuick((current) => ({ ...current, [key]: value }));
+  const setBookingField = (key: keyof typeof booking, value: string) => setBooking((current) => ({ ...current, [key]: value }));
 
-  const setDetailedField = (key: keyof DetailedForm, value: string) => {
-    setDetailedForm((current) => ({ ...current, [key]: value }));
-  };
+  function submitQuick(event: FormEvent) {
+    event.preventDefault();
+    if (!quick.name || !quick.phone || !quick.service) return;
+    sendWhatsApp([
+      'Bonjour Coco Loc 971,',
+      '',
+      'Je souhaite faire une demande rapide.',
+      `Nom : ${quick.name}`,
+      `Téléphone : ${quick.phone}`,
+      `Service : ${quick.service}`,
+      `Date souhaitée : ${quick.date || 'À préciser'}`,
+      `Message : ${quick.message || 'Aucun message ajouté'}`,
+    ]);
+  }
 
-  const onQuickSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!quickForm.name || !quickForm.phone || !quickForm.service) {
-      toast.error("Merci de remplir nom, téléphone et service.");
-      return;
-    }
-
-    sendWhatsApp(
-      [
-        "Bonjour Coco Loc 971,",
-        "",
-        "Je souhaite faire une demande rapide.",
-        `Nom : ${quickForm.name}`,
-        `Téléphone : ${quickForm.phone}`,
-        `Service : ${quickForm.service}`,
-        `Date souhaitée : ${quickForm.date || "À préciser"}`,
-        `Message : ${quickForm.message || "Aucun message ajouté"}`,
-      ].join("\n"),
-    );
-    toast.success("Demande prête sur WhatsApp.");
-  };
-
-  const onDetailedSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      !detailedForm.driverName ||
-      !detailedForm.driverPhone ||
-      !detailedForm.pickupDate ||
-      !detailedForm.returnDate ||
-      !detailedForm.vehicle
-    ) {
-      toast.error("Merci de compléter conducteur, téléphone, dates et véhicule.");
-      return;
-    }
-
-    const options = detailedOptions
+  function submitBooking(event: FormEvent) {
+    event.preventDefault();
+    if (!booking.driverName || !booking.driverPhone || !booking.pickupDate || !booking.returnDate) return;
+    const optionList = options
       .filter((option) => selectedOptions[option.key])
-      .map((option) => `${option.label}${option.price ? ` (+${option.price}€)` : ""}`)
-      .join(", ");
-
-    sendWhatsApp(
-      [
-        "Bonjour Coco Loc 971,",
-        "",
-        "Je souhaite réserver un véhicule.",
-        `Conducteur : ${detailedForm.driverName}`,
-        `Téléphone : ${detailedForm.driverPhone}`,
-        `Email : ${detailedForm.driverEmail || "Non renseigné"}`,
-        `Véhicule : ${detailedForm.vehicle}`,
-        `Départ : ${detailedForm.pickupDate} à ${detailedForm.pickupTime}`,
-        `Retour : ${detailedForm.returnDate} à ${detailedForm.returnTime}`,
-        `Lieu de récupération : ${detailedForm.pickupLocation}`,
-        `Lieu de retour : ${detailedForm.returnLocation}`,
-        `Options : ${options || "Aucune option"}`,
-        `Paiement : ${detailedForm.payment}`,
-        `Confirmation : ${detailedForm.confirmation}`,
-        `Estimation : ${rentalDays} jour(s), ${estimatedTotal}€`,
-        `Note : ${detailedForm.note || "Aucune note ajoutée"}`,
-      ].join("\n"),
-    );
-    toast.success("Réservation prête sur WhatsApp.");
-  };
+      .map((option) => `${option.label}${option.price ? ` (+${option.price}€)` : ''}`)
+      .join(', ');
+    sendWhatsApp([
+      'Bonjour Coco Loc 971,',
+      '',
+      'Je souhaite réserver un véhicule.',
+      `Conducteur : ${booking.driverName}`,
+      `Téléphone : ${booking.driverPhone}`,
+      `Email : ${booking.driverEmail || 'Non renseigné'}`,
+      `Véhicule : ${booking.vehicle}`,
+      `Départ : ${booking.pickupDate} à ${booking.pickupTime}`,
+      `Retour : ${booking.returnDate} à ${booking.returnTime}`,
+      `Lieu de récupération : ${booking.pickupLocation}`,
+      `Lieu de retour : ${booking.returnLocation}`,
+      `Options : ${optionList || 'Aucune option'}`,
+      `Paiement : ${booking.payment}`,
+      `Confirmation : ${booking.confirmation}`,
+      `Tarif indicatif : ${pack ? `${pack.name}, ${total}€` : 'à confirmer'}`,
+      `Note : ${booking.note || 'Aucune note ajoutée'}`,
+    ]);
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* NAV */}
-      <header className="fixed top-0 z-50 w-full backdrop-blur-md bg-background/70 border-b border-border/50">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-          <a href="#top" className="flex items-center gap-2">
-            <div className="grid h-10 w-10 place-items-center rounded-full bg-tropical text-white shadow-soft">
-              <Sun className="h-5 w-5" />
-            </div>
-            <div className="leading-tight">
-              <div className="font-display text-lg font-bold">Coco Loc</div>
-              <div className="text-[10px] tracking-widest text-muted-foreground">GUADELOUPE · 971</div>
-            </div>
+    <div className='min-h-screen bg-background'>
+      <header className='fixed top-0 z-50 w-full border-b border-border/50 bg-background/75 backdrop-blur-md'>
+        <div className='mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6'>
+          <a href='#top' className='flex items-center gap-2'>
+            <span className='grid h-10 w-10 place-items-center rounded-full bg-tropical text-white shadow-soft'>
+              <Sun className='h-5 w-5' />
+            </span>
+            <span className='leading-tight'>
+              <span className='block font-display text-lg font-bold'>Coco Loc</span>
+              <span className='block text-[10px] tracking-widest text-muted-foreground'>GUADELOUPE · 971</span>
+            </span>
           </a>
-          <nav className="hidden gap-6 text-sm font-medium md:flex">
-            <a href="#location" className="hover:text-primary">Location</a>
-            <a href="#plaques" className="hover:text-primary">Plaques</a>
-            <a href="#avantages" className="hover:text-primary">Avantages</a>
-            <a href="#reservation" className="hover:text-primary">Réserver</a>
+          <nav className='hidden gap-6 text-sm font-medium md:flex'>
+            <a href='#location' className='hover:text-primary'>Location</a>
+            <a href='#plaques' className='hover:text-primary'>Plaques</a>
+            <a href='#avantages' className='hover:text-primary'>Avantages</a>
+            <a href='#reservation' className='hover:text-primary'>Réserver</a>
           </nav>
-          <Button asChild size="sm" className="bg-coral text-white hover:bg-coral/90 shadow-soft">
-            <a href="tel:0691278794"><Phone className="mr-1 h-4 w-4" />06 91 27 87 94</a>
-          </Button>
+          <a href='tel:0691278794' className='inline-flex h-10 items-center gap-2 rounded-xl bg-coral px-4 text-sm font-bold text-white shadow-soft'>
+            <Phone className='h-4 w-4' />06 91 27 87 94
+          </a>
         </div>
       </header>
 
-      {/* HERO */}
-      <section id="top" className="relative flex min-h-screen items-center overflow-hidden pt-20">
-        <img
-          src={heroImg}
-          alt="Plage tropicale en Guadeloupe avec voiture"
-          width={1920}
-          height={1280}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-
-        <div className="relative mx-auto grid w-full max-w-7xl gap-8 px-4 py-20 sm:px-6">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-1.5 text-xs font-semibold shadow-soft backdrop-blur">
-              <span className="h-2 w-2 rounded-full bg-palm animate-pulse" />
-              Location & Plaques · Guadeloupe 971
+      <section id='top' className='relative flex min-h-[84vh] items-center overflow-hidden pt-20'>
+        <img src={heroImg} alt='Plage tropicale en Guadeloupe avec voiture' className='absolute inset-0 h-full w-full object-cover object-center' />
+        <div className='absolute inset-0 bg-gradient-to-r from-background/95 via-background/60 to-transparent' />
+        <div className='absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent' />
+        <div className='relative mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:py-12'>
+          <div className='max-w-2xl'>
+            <div className='inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-1.5 text-xs font-semibold shadow-soft backdrop-blur'>
+              <span className='h-2 w-2 rounded-full bg-palm' />Location voiture · plaques 4D/3D · Guadeloupe 971
             </div>
-            <h1 className="mt-6 font-display text-5xl font-black leading-[0.95] tracking-tight sm:text-7xl lg:text-8xl">
-              Coco <span className="text-coral">Loc</span>
-              <span className="block text-3xl sm:text-4xl lg:text-5xl mt-2 text-ocean font-bold italic">
-                Le soleil, les clés, partez !
-              </span>
+            <h1 className='mt-5 font-display text-5xl font-black leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl'>
+              Coco <span className='text-coral'>Loc</span>
+              <span className='mt-3 block text-2xl font-bold italic text-ocean sm:text-4xl lg:text-5xl'>Le soleil, les clés, partez !</span>
             </h1>
-            <p className="mt-6 max-w-lg text-lg text-muted-foreground">
-              Location de voitures récentes et pose de plaques d'immatriculation
-              4D & 3D Topaze. Livraison à domicile, assurance incluse, kilométrage illimité.
+            <p className='mt-5 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg'>
+              Louez une voiture prête à partir, ajoutez vos plaques homologuées si besoin, et confirmez tout simplement par WhatsApp.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="bg-coral text-white hover:bg-coral/90 shadow-glow h-14 px-8 text-base font-semibold">
-                <a href="#reservation">Réserver maintenant →</a>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="h-14 px-8 text-base border-2 hover:bg-tropical hover:text-white hover:border-transparent">
-                <a href="https://instagram.com/coco.loc971" target="_blank" rel="noreferrer">
-                  <Instagram className="mr-2 h-5 w-5" />@coco.loc971
-                </a>
-              </Button>
+            <div className='mt-6 flex flex-wrap gap-3'>
+              <a href='#reservation' className='inline-flex h-13 items-center rounded-xl bg-coral px-7 text-base font-bold text-white shadow-glow'>Faire une demande →</a>
+              <a href='https://instagram.com/coco.loc971' target='_blank' rel='noreferrer' className='inline-flex h-13 items-center gap-2 rounded-xl border-2 border-border bg-card px-7 text-base font-bold shadow-soft'>
+                <Instagram className='h-5 w-5' />@coco.loc971
+              </a>
             </div>
-
-            <div className="mt-10 grid grid-cols-3 gap-4 max-w-md">
+            <div className='mt-7 grid max-w-md grid-cols-3 gap-4'>
               {[
-                { v: "À partir de 50€", l: "Pack dépannage" },
-                { v: "4 modèles", l: "au choix" },
-                { v: "0 frais", l: "kilométriques" },
-              ].map((s) => (
-                <div key={s.l} className="rounded-2xl border border-border bg-card/70 backdrop-blur px-3 py-3 text-center shadow-soft">
-                  <div className="text-sm font-bold text-ocean">{s.v}</div>
-                  <div className="text-[11px] text-muted-foreground">{s.l}</div>
+                ['50€', 'dépannage local'],
+                ['4 modèles', 'selon besoin'],
+                ['WhatsApp', 'confirmation rapide'],
+              ].map(([value, label]) => (
+                <div key={label} className='rounded-2xl border border-border bg-card/75 px-3 py-3 text-center shadow-soft backdrop-blur'>
+                  <div className='text-sm font-bold text-ocean'>{value}</div>
+                  <div className='text-[11px] text-muted-foreground'>{label}</div>
                 </div>
               ))}
             </div>
@@ -356,82 +251,56 @@ function Home() {
         </div>
       </section>
 
-      {/* LOCATION */}
-      <section id="location" className="py-24 px-4 sm:px-6">
-        <div className="mx-auto max-w-7xl">
-          <SectionTitle eyebrow="Notre flotte" title="Choisissez votre voiture" />
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {cars.map((c, i) => (
-              <div
-                key={c.name}
-                className="group relative overflow-hidden rounded-3xl border border-border bg-card p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
-              >
-                <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-tropical opacity-10 transition group-hover:opacity-20" />
-                <div className="grid h-14 w-14 place-items-center rounded-2xl bg-tropical text-white shadow-soft">
-                  <c.icon className="h-7 w-7" />
-                </div>
-                <div className="mt-4 text-xs font-semibold uppercase tracking-wider text-coral">
-                  Catégorie {i + 1}
-                </div>
-                <h3 className="mt-1 font-display text-xl font-bold">{c.name}</h3>
-                <p className="text-sm text-muted-foreground">{c.tier}</p>
-                <div className="mt-4 flex items-center gap-3 text-sm text-muted-foreground">
-                  <User className="h-4 w-4 text-ocean" />
-                  <span>{c.seats} places</span>
+      <section id='location' className='px-4 pb-20 pt-12 sm:px-6 lg:pb-24 lg:pt-14'>
+        <div className='mx-auto max-w-7xl'>
+          <SectionTitle eyebrow='Notre flotte' title='Une voiture adaptée à chaque trajet' />
+          <div className='mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4'>
+            {cars.map((car, index) => (
+              <div key={car.name} className={`${card} relative overflow-hidden p-6 transition hover:-translate-y-1 hover:shadow-glow`}>
+                <div className='absolute -right-6 -top-6 h-24 w-24 rounded-full bg-tropical opacity-10' />
+                <span className='grid h-14 w-14 place-items-center rounded-2xl bg-tropical text-white shadow-soft'>
+                  <car.icon className='h-7 w-7' />
+                </span>
+                <div className='mt-4 text-xs font-bold uppercase tracking-wider text-coral'>Catégorie {index + 1}</div>
+                <h3 className='mt-1 font-display text-xl font-bold'>{car.name}</h3>
+                <p className='text-sm text-muted-foreground'>{car.tier}</p>
+                <div className='mt-4 flex items-center gap-3 text-sm text-muted-foreground'>
+                  <User className='h-4 w-4 text-ocean' />{car.seats} places
                 </div>
               </div>
             ))}
           </div>
-
-          {/* PRICING */}
-          <div className="mt-16">
-            <h3 className="font-display text-2xl font-bold sm:text-3xl">Tarifs location</h3>
-            <p className="text-muted-foreground">Prix par catégorie : Panda/Twingo · Clio 4 · Clio 5 auto · Captur</p>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {rentalPacks.map((p) => (
-                <div
-                  key={p.name}
-                  className={`relative overflow-hidden rounded-3xl border-2 p-6 shadow-soft transition hover:-translate-y-1 ${
-                    p.popular ? "border-coral bg-card" : "border-border bg-card"
-                  }`}
-                >
-                  {p.popular && (
-                    <span className="absolute right-4 top-4 rounded-full bg-coral px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
-                      Populaire
-                    </span>
-                  )}
-                  <div className={`inline-block h-2 w-12 rounded-full ${p.accent}`} />
-                  <h4 className="mt-3 font-display text-2xl font-black">Pack {p.name}</h4>
-                  <p className="text-sm text-muted-foreground">{p.sub}</p>
-                  <ul className="mt-5 space-y-2">
-                    {p.prices.map((price, idx) => (
-                      <li key={idx} className="flex items-center justify-between rounded-xl bg-muted px-3 py-2 text-sm">
-                        <span className="text-muted-foreground">{["Panda/Twingo", "Clio 4", "Clio 5 auto", "Captur"][idx]}</span>
-                        <span className="font-bold text-ocean">{price}€</span>
+          <div className='mt-16'>
+            <h3 className='font-display text-2xl font-bold sm:text-3xl'>Tarifs location</h3>
+            <p className='mt-2 max-w-2xl text-muted-foreground'>Des packs lisibles pour comparer vite : Panda/Twingo, Clio 4, Clio 5 automatique et Captur.</p>
+            <div className='mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4'>
+              {packs.map((pack, packIndex) => (
+                <div key={pack.name} className={`${card} relative overflow-hidden border-2 p-6 ${pack.popular ? 'border-coral' : ''}`}>
+                  {pack.popular && <span className='absolute right-4 top-4 rounded-full bg-coral px-3 py-1 text-[10px] font-bold uppercase text-white'>Populaire</span>}
+                  <span className={`block h-2 w-12 rounded-full ${pack.color}`} />
+                  <h4 className='mt-3 font-display text-[1.65rem] font-black leading-tight'>Pack {pack.name}</h4>
+                  <p className='text-sm text-muted-foreground'>{pack.sub}</p>
+                  <ul className='mt-5 space-y-2'>
+                    {cars.map((car) => (
+                      <li key={car.name} className='flex items-center justify-between rounded-xl bg-muted px-3 py-2 text-sm'>
+                        <span className='text-muted-foreground'>{car.name.replace('Fiat ', '').replace(' / Twingo 3', '/Twingo')}</span>
+                        <span className='font-bold text-ocean'>{car.prices[packIndex]}€</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               ))}
             </div>
-
-            {/* Dépannage */}
-            <div className="mt-6 rounded-3xl border-2 border-dashed border-palm bg-palm/5 p-6 sm:p-8">
-              <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className='mt-6 rounded-3xl border-2 border-dashed border-palm bg-palm/5 p-6 sm:p-8'>
+              <div className='flex flex-wrap items-center justify-between gap-4'>
                 <div>
-                  <div className="text-xs font-bold uppercase tracking-widest text-palm">Spécial locaux 971</div>
-                  <h4 className="mt-1 font-display text-2xl font-bold">Pack dépannage</h4>
-                  <p className="text-sm text-muted-foreground">Pour les Guadeloupéens, dépannage rapide.</p>
+                  <div className='text-xs font-bold uppercase tracking-widest text-palm'>Spécial locaux 971</div>
+                  <h4 className='mt-1 font-display text-2xl font-bold'>Pack dépannage</h4>
+                  <p className='text-sm text-muted-foreground'>Une solution courte durée quand il faut repartir vite.</p>
                 </div>
-                <div className="flex gap-3">
-                  <div className="rounded-2xl bg-card border border-border px-5 py-3 text-center shadow-soft">
-                    <div className="text-[10px] uppercase text-muted-foreground tracking-wider">2 jours</div>
-                    <div className="font-display text-2xl font-black text-palm">50€</div>
-                  </div>
-                  <div className="rounded-2xl bg-card border border-border px-5 py-3 text-center shadow-soft">
-                    <div className="text-[10px] uppercase text-muted-foreground tracking-wider">3 jours</div>
-                    <div className="font-display text-2xl font-black text-palm">70€</div>
-                  </div>
+                <div className='flex gap-3'>
+                  <Price label='2 jours' value='50€' />
+                  <Price label='3 jours' value='70€' />
                 </div>
               </div>
             </div>
@@ -439,514 +308,194 @@ function Home() {
         </div>
       </section>
 
-      {/* PLAQUES */}
-      <section id="plaques" className="relative overflow-hidden bg-sea py-24 px-4 sm:px-6 text-white">
-        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, white 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
-        <div className="relative mx-auto max-w-7xl">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-4 py-1.5 text-xs font-semibold uppercase tracking-wider">
-                <Sparkles className="h-3.5 w-3.5" /> Vente & pose
-              </div>
-              <h2 className="mt-4 font-display text-4xl font-black sm:text-5xl">
-                Plaques 4D & 3D Topaze
-              </h2>
-              <p className="mt-4 max-w-md text-white/85">
-                Plaques homologuées, pose soignée. Donnez du style à votre véhicule avec un rendu net et premium.
-              </p>
-              <img
-                src={plaqueImg}
-                alt="Plaque d'immatriculation 4D"
-                width={1024}
-                height={768}
-                loading="lazy"
-                className="mt-8 rounded-3xl shadow-glow border-4 border-white/20"
-              />
+      <section id='plaques' className='relative overflow-hidden bg-sea px-4 py-20 text-white sm:px-6 lg:py-24'>
+        <div className='relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:items-center'>
+          <div>
+            <div className='inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs font-bold uppercase tracking-wider backdrop-blur'>
+              <Sparkles className='h-3.5 w-3.5' />Vente & pose
             </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {plaques.map((p) => (
-                <div
-                  key={p.name}
-                  className="relative rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 p-6 transition hover:bg-white/15"
-                >
-                  {p.badge && (
-                    <span className="absolute -top-2 right-4 rounded-full bg-sun px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-foreground">
-                      {p.badge}
-                    </span>
-                  )}
-                  <h3 className="font-display text-xl font-bold">{p.name}</h3>
-                  <div className="mt-4 flex items-baseline gap-1">
-                    <span className="font-display text-5xl font-black">{p.price}</span>
-                    <span className="text-2xl font-bold">€</span>
-                  </div>
-                  <Button asChild className="mt-4 w-full bg-coral text-white hover:bg-coral/90 border-0">
-                    <a href="#reservation">Commander</a>
-                  </Button>
-                </div>
-              ))}
-            </div>
+            <h2 className='mt-4 font-display text-3xl font-black sm:text-5xl'>Plaques 4D & 3D Topaze</h2>
+            <p className='mt-4 max-w-lg text-white/85'>Plaques homologuées, rendu premium et pose soignée sur rendez-vous. Une offre simple, lisible et prête à commander.</p>
+            <img src={plaqueImg} alt='Plaque d’immatriculation 4D' className='mt-8 w-full max-w-md rounded-2xl border-4 border-white/20 object-cover shadow-glow' />
           </div>
-        </div>
-      </section>
-
-      {/* AVANTAGES */}
-      <section id="avantages" className="py-24 px-4 sm:px-6">
-        <div className="mx-auto max-w-7xl">
-          <SectionTitle eyebrow="Pourquoi Coco Loc" title="Tout ce qu'il faut, rien en plus" />
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {advantages.map((a) => (
-              <div key={a.title} className="rounded-3xl bg-card border border-border p-6 shadow-soft transition hover:-translate-y-1 hover:shadow-glow">
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-tropical text-white shadow-soft">
-                  <a.icon className="h-6 w-6" />
+          <div className='grid gap-4 sm:grid-cols-2'>
+            {plaques.map((plaque) => (
+              <div key={plaque.name} className='relative rounded-3xl border border-white/20 bg-white/10 p-6 backdrop-blur-md'>
+                {plaque.badge && <span className='absolute -top-2 right-4 rounded-full bg-sun px-3 py-1 text-[10px] font-bold uppercase text-foreground'>{plaque.badge}</span>}
+                <h3 className='font-display text-xl font-bold'>{plaque.name}</h3>
+                <div className='mt-4 flex items-baseline gap-1'>
+                  <span className='font-display text-5xl font-black'>{plaque.price}</span><span className='text-2xl font-bold'>€</span>
                 </div>
-                <h3 className="mt-4 font-display text-lg font-bold">{a.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{a.desc}</p>
+                <a href='#reservation' className='mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl bg-coral font-bold text-white'>Commander</a>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* RESERVATION */}
-      <section id="reservation" className="py-24 px-4 sm:px-6 bg-muted/40">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.35fr]">
-          <div>
-            <SectionTitle eyebrow="Réservation" title="Deux façons de réserver" />
-            <p className="mt-4 text-muted-foreground max-w-md">
-              Choisissez une demande rapide pour aller droit au but, ou une réservation complète
-              avec dates, véhicule, options, paiement et mode de confirmation.
-            </p>
+      <section id='avantages' className='px-4 py-20 sm:px-6 lg:py-24'>
+        <div className='mx-auto max-w-7xl'>
+          <SectionTitle eyebrow='Pourquoi Coco Loc' title='Un service simple à comprendre' />
+          <div className='mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4'>
+            {advantages.map((advantage) => (
+              <div key={advantage.title} className={`${card} p-6 transition hover:-translate-y-1 hover:shadow-glow`}>
+                <span className='grid h-12 w-12 place-items-center rounded-2xl bg-tropical text-white shadow-soft'><advantage.icon className='h-6 w-6' /></span>
+                <h3 className='mt-4 font-display text-lg font-bold'>{advantage.title}</h3>
+                <p className='mt-1 text-sm text-muted-foreground'>{advantage.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            <div className="mt-8 grid gap-4">
+      <section id='reservation' className='bg-muted/40 px-4 py-20 sm:px-6 lg:py-24'>
+        <div className='mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.35fr] lg:items-start'>
+          <div>
+            <SectionTitle eyebrow='Réservation' title='Deux parcours, un seul contact' />
+            <p className='mt-4 max-w-md text-muted-foreground'>Le client peut aller vite avec une demande simple, ou remplir une réservation complète avec véhicule, créneau, options, paiement et confirmation.</p>
+            <div className='mt-8 grid gap-4'>
               {[
-                { icon: MessageCircle, title: "Rapide", text: "Parfait pour une question, un dépannage ou une disponibilité." },
-                { icon: ClipboardCheck, title: "Complète", text: "Sélection du véhicule, du créneau, des options et du règlement." },
-                { icon: CreditCard, title: "Flexible", text: "Paiement au retrait, acompte ou paiement en ligne sécurisé." },
+                { icon: MessageCircle, title: 'Demande rapide', text: 'Nom, téléphone, service et message : idéal pour une disponibilité ou un dépannage.' },
+                { icon: ClipboardCheck, title: 'Réservation complète', text: 'Dates, véhicule, lieux, options et coordonnées conducteur dans un parcours clair.' },
+                { icon: CreditCard, title: 'Paiement adaptable', text: 'Retrait, acompte ou paiement en ligne selon l’organisation choisie.' },
               ].map((item) => (
-                <div key={item.title} className="rounded-3xl bg-card border border-border p-5 shadow-soft">
-                  <div className="flex items-start gap-4">
-                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-sunset text-white">
-                      <item.icon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-display text-lg font-bold">{item.title}</h3>
-                      <p className="text-sm text-muted-foreground">{item.text}</p>
-                    </div>
+                <div key={item.title} className={`${card} p-5`}>
+                  <div className='flex items-start gap-4'>
+                    <span className='grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-sunset text-white'><item.icon className='h-5 w-5' /></span>
+                    <span><h3 className='font-display text-lg font-bold'>{item.title}</h3><p className='text-sm text-muted-foreground'>{item.text}</p></span>
                   </div>
                 </div>
               ))}
             </div>
-
-            <div className="mt-8 space-y-4">
+            <div className='mt-8 hidden space-y-4 lg:block'>
               {[
-                { icon: Phone, label: "06 91 27 87 94", href: "tel:0691278794" },
-                { icon: Mail, label: "cocoloc97-1@outlook.fr", href: "mailto:cocoloc97-1@outlook.fr" },
-                { icon: Instagram, label: "@coco.loc971", href: "https://instagram.com/coco.loc971" },
-                { icon: MapPin, label: "Guadeloupe · 971", href: "#" },
-              ].map((c) => (
-                <a
-                  key={c.label}
-                  href={c.href}
-                  className="flex items-center gap-4 rounded-2xl bg-card border border-border p-4 shadow-soft transition hover:border-coral hover:-translate-y-0.5"
-                >
-                  <div className="grid h-11 w-11 place-items-center rounded-xl bg-tropical text-white">
-                    <c.icon className="h-5 w-5" />
-                  </div>
-                  <span className="font-semibold">{c.label}</span>
+                [Phone, '06 91 27 87 94', 'tel:0691278794'],
+                [Mail, 'cocoloc97-1@outlook.fr', 'mailto:cocoloc97-1@outlook.fr'],
+                [Instagram, '@coco.loc971', 'https://instagram.com/coco.loc971'],
+                [MapPin, 'Guadeloupe · 971', '#'],
+              ].map(([Icon, label, href]) => (
+                <a key={String(label)} href={String(href)} className={`${card} flex items-center gap-4 p-4 font-semibold`}>
+                  <span className='grid h-11 w-11 place-items-center rounded-xl bg-tropical text-white'><Icon className='h-5 w-5' /></span>{String(label)}
                 </a>
               ))}
             </div>
           </div>
 
-          <Tabs defaultValue="quick" className="rounded-3xl bg-card border border-border p-4 shadow-glow sm:p-6">
-            <TabsList className="grid h-auto w-full grid-cols-2 rounded-2xl bg-muted p-1">
-              <TabsTrigger value="quick" className="rounded-xl py-3 text-sm font-bold">
-                Réservation rapide
-              </TabsTrigger>
-              <TabsTrigger value="complete" className="rounded-xl py-3 text-sm font-bold">
-                Réservation complète
-              </TabsTrigger>
-            </TabsList>
+          <div className={`${card} self-start p-4 shadow-glow sm:p-6`}>
+            <div className='grid rounded-2xl bg-muted p-1 text-xs font-bold sm:text-sm'>
+              <div className='grid grid-cols-2'>
+                <button type='button' onClick={() => setMode('quick')} className={`rounded-xl py-3 ${mode === 'quick' ? 'bg-card shadow-soft' : ''}`}>Demande rapide</button>
+                <button type='button' onClick={() => setMode('complete')} className={`rounded-xl py-3 ${mode === 'complete' ? 'bg-card shadow-soft' : ''}`}>Réservation complète</button>
+              </div>
+            </div>
 
-            <TabsContent value="quick" className="mt-6">
-              <form onSubmit={onQuickSubmit} className="grid gap-4">
-                <div className="rounded-2xl border-l-4 border-palm bg-palm/5 p-4">
-                  <div className="flex items-start gap-3">
-                    <Check className="mt-0.5 h-5 w-5 text-palm" />
-                    <p className="text-sm">
-                      <strong>Réponse rapide</strong> — disponible 7j/7 pour réservation et dépannage local.
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="quick-name">Nom complet *</Label>
-                  <Input
-                    id="quick-name"
-                    required
-                    maxLength={80}
-                    value={quickForm.name}
-                    onChange={(e) => setQuickField("name", e.target.value)}
-                    className="mt-1.5 h-12"
-                    placeholder="Jean Dupont"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="quick-phone">Téléphone *</Label>
-                  <Input
-                    id="quick-phone"
-                    type="tel"
-                    required
-                    maxLength={20}
-                    value={quickForm.phone}
-                    onChange={(e) => setQuickField("phone", e.target.value)}
-                    className="mt-1.5 h-12"
-                    placeholder="06 90 ..."
-                  />
-                </div>
-                <div>
-                  <Label>Service *</Label>
-                  <Select value={quickForm.service} onValueChange={(v) => setQuickField("service", v)}>
-                    <SelectTrigger className="mt-1.5 h-12">
-                      <SelectValue placeholder="Choisissez un service" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Location Panda/Twingo">Location Panda / Twingo</SelectItem>
-                      <SelectItem value="Location Clio 4">Location Clio 4</SelectItem>
-                      <SelectItem value="Location Clio 5 auto">Location Clio 5 auto</SelectItem>
-                      <SelectItem value="Location Captur">Location Captur</SelectItem>
-                      <SelectItem value="Pack dépannage">Pack dépannage local</SelectItem>
-                      <SelectItem value="Plaques 4D">Plaques 4D</SelectItem>
-                      <SelectItem value="Plaques 3D Topaze">Plaques 3D Topaze</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="quick-date">Date souhaitée</Label>
-                  <Input
-                    id="quick-date"
-                    type="date"
-                    value={quickForm.date}
-                    onChange={(e) => setQuickField("date", e.target.value)}
-                    className="mt-1.5 h-12"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="quick-msg">Message</Label>
-                  <Textarea
-                    id="quick-msg"
-                    rows={4}
-                    maxLength={500}
-                    value={quickForm.message}
-                    onChange={(e) => setQuickField("message", e.target.value)}
-                    className="mt-1.5"
-                    placeholder="Lieu de livraison, durée, options..."
-                  />
-                </div>
-                <Button type="submit" size="lg" className="h-14 bg-coral text-white hover:bg-coral/90 shadow-glow text-base font-semibold">
-                  <Send className="mr-2 h-5 w-5" />
-                  Envoyer ma demande
-                </Button>
+            {mode === 'quick' ? (
+              <form onSubmit={submitQuick} className='mt-6 grid gap-4'>
+                <Notice>Demande directe — le message est préparé pour WhatsApp avec les informations essentielles.</Notice>
+                <TextField label='Nom complet *' value={quick.name} onChange={(value) => setQuickField('name', value)} required />
+                <TextField label='Téléphone *' type='tel' value={quick.phone} onChange={(value) => setQuickField('phone', value)} required />
+                <label className='text-sm font-medium'>Service *<select className={field} value={quick.service} onChange={(event) => setQuickField('service', event.target.value)} required>
+                  <option value=''>Choisissez un service</option>
+                  {['Location Panda/Twingo', 'Location Clio 4', 'Location Clio 5 auto', 'Location Captur', 'Pack dépannage local', 'Plaques 4D', 'Plaques 3D Topaze'].map((service) => <option key={service}>{service}</option>)}
+                </select></label>
+                <TextField label='Date souhaitée' type='date' value={quick.date} onChange={(value) => setQuickField('date', value)} />
+                <label className='text-sm font-medium'>Message<textarea className={area} value={quick.message} onChange={(event) => setQuickField('message', event.target.value)} placeholder='Exemple : Clio 4 pour 7 jours, récupération à l’aéroport.' /></label>
+                <SubmitButton>Préparer ma demande</SubmitButton>
               </form>
-            </TabsContent>
-
-            <TabsContent value="complete" className="mt-6">
-              <form onSubmit={onDetailedSubmit} className="grid gap-6">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <Label>Véhicule *</Label>
-                    <Select value={detailedForm.vehicle} onValueChange={(v) => setDetailedField("vehicle", v)}>
-                      <SelectTrigger className="mt-1.5 h-12">
-                        <SelectValue placeholder="Sélectionner une voiture" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {cars.map((car) => (
-                          <SelectItem key={car.name} value={car.name}>
-                            {car.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label>Mode de paiement</Label>
-                    <Select value={detailedForm.payment} onValueChange={(v) => setDetailedField("payment", v)}>
-                      <SelectTrigger className="mt-1.5 h-12">
-                        <SelectValue placeholder="Choisir le paiement" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Paiement à la récupération">Paiement à la récupération</SelectItem>
-                        <SelectItem value="Acompte à la confirmation">Acompte à la confirmation</SelectItem>
-                        <SelectItem value="Paiement en ligne sécurisé">Paiement en ligne sécurisé</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+            ) : (
+              <form onSubmit={submitBooking} className='mt-6 grid gap-6'>
+                <div className='grid gap-4 md:grid-cols-2'>
+                  <SelectField label='Véhicule *' value={booking.vehicle} onChange={(value) => setBookingField('vehicle', value)} values={cars.map((car) => car.name)} />
+                  <SelectField label='Mode de paiement' value={booking.payment} onChange={(value) => setBookingField('payment', value)} values={['Paiement à la récupération', 'Acompte à la confirmation', 'Paiement en ligne sécurisé']} />
                 </div>
-
-                <div className="grid gap-4 md:grid-cols-4">
-                  <div className="md:col-span-2">
-                    <Label htmlFor="pickup-date">Départ *</Label>
-                    <div className="mt-1.5 grid gap-2 sm:grid-cols-[1fr_auto]">
-                      <div className="relative">
-                        <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          id="pickup-date"
-                          type="date"
-                          required
-                          value={detailedForm.pickupDate}
-                          onChange={(e) => setDetailedField("pickupDate", e.target.value)}
-                          className="h-12 pl-10"
-                        />
-                      </div>
-                      <div className="relative sm:w-28">
-                        <Clock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          type="time"
-                          value={detailedForm.pickupTime}
-                          onChange={(e) => setDetailedField("pickupTime", e.target.value)}
-                          className="h-12 pl-10"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="md:col-span-2">
-                    <Label htmlFor="return-date">Retour *</Label>
-                    <div className="mt-1.5 grid gap-2 sm:grid-cols-[1fr_auto]">
-                      <div className="relative">
-                        <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          id="return-date"
-                          type="date"
-                          required
-                          value={detailedForm.returnDate}
-                          onChange={(e) => setDetailedField("returnDate", e.target.value)}
-                          className="h-12 pl-10"
-                        />
-                      </div>
-                      <div className="relative sm:w-28">
-                        <Clock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          type="time"
-                          value={detailedForm.returnTime}
-                          onChange={(e) => setDetailedField("returnTime", e.target.value)}
-                          className="h-12 pl-10"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                <div className='grid gap-4 md:grid-cols-2'>
+                  <DateTime label='Départ *' date={booking.pickupDate} time={booking.pickupTime} onDate={(value) => setBookingField('pickupDate', value)} onTime={(value) => setBookingField('pickupTime', value)} />
+                  <DateTime label='Retour *' date={booking.returnDate} time={booking.returnTime} onDate={(value) => setBookingField('returnDate', value)} onTime={(value) => setBookingField('returnTime', value)} />
                 </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <Label>Lieu de récupération</Label>
-                    <Select value={detailedForm.pickupLocation} onValueChange={(v) => setDetailedField("pickupLocation", v)}>
-                      <SelectTrigger className="mt-1.5 h-12">
-                        <SelectValue placeholder="Choisir un lieu" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Aéroport Pôle Caraïbes">Aéroport Pôle Caraïbes</SelectItem>
-                        <SelectItem value="Pointe-à-Pitre">Pointe-à-Pitre</SelectItem>
-                        <SelectItem value="Baie-Mahault">Baie-Mahault</SelectItem>
-                        <SelectItem value="Le Gosier">Le Gosier</SelectItem>
-                        <SelectItem value="Sainte-Anne">Sainte-Anne</SelectItem>
-                        <SelectItem value="Autre lieu à préciser">Autre lieu à préciser</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label>Lieu de retour</Label>
-                    <Select value={detailedForm.returnLocation} onValueChange={(v) => setDetailedField("returnLocation", v)}>
-                      <SelectTrigger className="mt-1.5 h-12">
-                        <SelectValue placeholder="Choisir un lieu" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Même lieu">Même lieu</SelectItem>
-                        <SelectItem value="Aéroport Pôle Caraïbes">Aéroport Pôle Caraïbes</SelectItem>
-                        <SelectItem value="Pointe-à-Pitre">Pointe-à-Pitre</SelectItem>
-                        <SelectItem value="Autre lieu à préciser">Autre lieu à préciser</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div className='grid gap-4 md:grid-cols-2'>
+                  <SelectField label='Lieu de récupération' value={booking.pickupLocation} onChange={(value) => setBookingField('pickupLocation', value)} values={['Aéroport Pôle Caraïbes', 'Pointe-à-Pitre', 'Baie-Mahault', 'Le Gosier', 'Sainte-Anne', 'Autre lieu à préciser']} />
+                  <SelectField label='Lieu de retour' value={booking.returnLocation} onChange={(value) => setBookingField('returnLocation', value)} values={['Même lieu', 'Aéroport Pôle Caraïbes', 'Pointe-à-Pitre', 'Autre lieu à préciser']} />
                 </div>
-
                 <div>
-                  <Label>Options</Label>
-                  <div className="mt-2 grid gap-3 sm:grid-cols-2">
-                    {detailedOptions.map((option) => (
-                      <label
-                        key={option.key}
-                        className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border bg-muted/40 p-4 transition hover:border-coral"
-                      >
-                        <Checkbox
-                          checked={selectedOptions[option.key]}
-                          onCheckedChange={(checked) =>
-                            setSelectedOptions((current) => ({
-                              ...current,
-                              [option.key]: Boolean(checked),
-                            }))
-                          }
-                          className="mt-1"
-                        />
-                        <span>
-                          <span className="block text-sm font-bold">{option.label}</span>
-                          <span className="block text-xs text-muted-foreground">
-                            {option.desc}
-                            {option.price ? ` · +${option.price}€` : " · inclus"}
-                          </span>
-                        </span>
+                  <div className='text-sm font-medium'>Options</div>
+                  <div className='mt-2 grid gap-3 sm:grid-cols-2'>
+                    {options.map((option) => (
+                      <label key={option.key} className='flex cursor-pointer items-start gap-3 rounded-2xl border border-border bg-muted/40 p-4 text-sm'>
+                        <input type='checkbox' checked={selectedOptions[option.key]} onChange={(event) => setSelectedOptions((current) => ({ ...current, [option.key]: event.target.checked }))} className='mt-1' />
+                        <span><strong>{option.label}</strong><span className='block text-xs text-muted-foreground'>{option.desc}{option.price ? ` · +${option.price}€` : ' · inclus'}</span></span>
                       </label>
                     ))}
                   </div>
                 </div>
-
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div>
-                    <Label htmlFor="driver-name">Conducteur *</Label>
-                    <Input
-                      id="driver-name"
-                      required
-                      value={detailedForm.driverName}
-                      onChange={(e) => setDetailedField("driverName", e.target.value)}
-                      className="mt-1.5 h-12"
-                      placeholder="Nom complet"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="driver-phone">Téléphone *</Label>
-                    <Input
-                      id="driver-phone"
-                      type="tel"
-                      required
-                      value={detailedForm.driverPhone}
-                      onChange={(e) => setDetailedField("driverPhone", e.target.value)}
-                      className="mt-1.5 h-12"
-                      placeholder="06 90 ..."
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="driver-email">Email</Label>
-                    <Input
-                      id="driver-email"
-                      type="email"
-                      value={detailedForm.driverEmail}
-                      onChange={(e) => setDetailedField("driverEmail", e.target.value)}
-                      className="mt-1.5 h-12"
-                      placeholder="email@exemple.fr"
-                    />
-                  </div>
+                <div className='grid gap-4 md:grid-cols-3'>
+                  <TextField label='Conducteur *' value={booking.driverName} onChange={(value) => setBookingField('driverName', value)} required />
+                  <TextField label='Téléphone *' type='tel' value={booking.driverPhone} onChange={(value) => setBookingField('driverPhone', value)} required />
+                  <TextField label='Email' type='email' value={booking.driverEmail} onChange={(value) => setBookingField('driverEmail', value)} />
                 </div>
-
-                <div className="grid gap-4 md:grid-cols-[1fr_1fr]">
-                  <div>
-                    <Label>Mode de confirmation</Label>
-                    <Select value={detailedForm.confirmation} onValueChange={(v) => setDetailedField("confirmation", v)}>
-                      <SelectTrigger className="mt-1.5 h-12">
-                        <SelectValue placeholder="Choisir la confirmation" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Confirmation WhatsApp">Confirmation WhatsApp</SelectItem>
-                        <SelectItem value="Confirmation téléphone">Confirmation téléphone</SelectItem>
-                        <SelectItem value="Confirmation email">Confirmation email</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="detailed-note">Informations complémentaires</Label>
-                    <Input
-                      id="detailed-note"
-                      value={detailedForm.note}
-                      onChange={(e) => setDetailedField("note", e.target.value)}
-                      className="mt-1.5 h-12"
-                      placeholder="Numéro de vol, adresse, besoin précis..."
-                    />
-                  </div>
+                <div className='grid gap-4 md:grid-cols-2'>
+                  <SelectField label='Mode de confirmation' value={booking.confirmation} onChange={(value) => setBookingField('confirmation', value)} values={['Confirmation WhatsApp', 'Confirmation téléphone', 'Confirmation email']} />
+                  <TextField label='Informations complémentaires' value={booking.note} onChange={(value) => setBookingField('note', value)} placeholder='Numéro de vol, adresse, besoin précis...' />
                 </div>
-
-                <div className="rounded-3xl border border-coral/30 bg-coral/5 p-5">
-                  <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
+                <div className='rounded-3xl border border-coral/30 bg-coral/5 p-5'>
+                  <div className='grid gap-4 md:grid-cols-[1fr_auto] md:items-center'>
                     <div>
-                      <div className="flex items-center gap-2 text-sm font-bold text-coral">
-                        <ClipboardCheck className="h-4 w-4" />
-                        Résumé de réservation
-                      </div>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        {detailedForm.vehicle} · {rentalDays || "Dates à choisir"} jour(s) · {detailedForm.pickupLocation}
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {detailedForm.payment} · {detailedForm.confirmation}
-                      </p>
+                      <div className='flex items-center gap-2 text-sm font-bold text-coral'><ClipboardCheck className='h-4 w-4' />Résumé de réservation</div>
+                      <p className='mt-2 text-sm text-muted-foreground'>{booking.vehicle} · {packLabel} · {durationLabel}</p>
+                      <p className='mt-1 text-xs text-muted-foreground'>{selectedCount} option(s) sélectionnée(s) · {booking.payment} · {booking.confirmation}</p>
                     </div>
-                    <div className="rounded-2xl bg-card border border-border px-5 py-4 text-center shadow-soft">
-                      <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Estimation</div>
-                      <div className="font-display text-3xl font-black text-coral">
-                        {estimatedTotal ? `${estimatedTotal}€` : "—"}
-                      </div>
+                    <div className='rounded-2xl border border-border bg-card px-5 py-4 text-center shadow-soft'>
+                      <div className='text-[10px] uppercase tracking-widest text-muted-foreground'>Tarif indicatif</div>
+                      <div className='font-display text-3xl font-black text-coral'>{total ? `${total}€` : '—'}</div>
                     </div>
                   </div>
                 </div>
-
-                <Button type="submit" size="lg" className="h-14 bg-coral text-white hover:bg-coral/90 shadow-glow text-base font-semibold">
-                  <Send className="mr-2 h-5 w-5" />
-                  Valider la réservation
-                </Button>
+                <SubmitButton>Préparer la réservation</SubmitButton>
               </form>
-            </TabsContent>
-          </Tabs>
+            )}
+          </div>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="border-t border-border bg-card">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <div className="grid h-10 w-10 place-items-center rounded-full bg-tropical text-white">
-                <Sun className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="font-display text-lg font-bold">Coco Loc 971</div>
-                <div className="text-[10px] tracking-widest text-muted-foreground">GUADELOUPE</div>
-              </div>
-            </div>
-            <p className="mt-4 text-sm text-muted-foreground max-w-xs">
-              Location de voitures & plaques d'immatriculation 4D / 3D Topaze.
-              Le soleil, les clés, partez !
-            </p>
-          </div>
-          <div>
-            <h4 className="font-display font-bold">Contact</h4>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><a href="tel:0691278794" className="hover:text-coral">06 91 27 87 94</a></li>
-              <li><a href="mailto:cocoloc97-1@outlook.fr" className="hover:text-coral">cocoloc97-1@outlook.fr</a></li>
-              <li><a href="https://instagram.com/coco.loc971" className="hover:text-coral">@coco.loc971</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-display font-bold">Services</h4>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><a href="#location" className="hover:text-coral">Location voitures</a></li>
-              <li><a href="#plaques" className="hover:text-coral">Plaques 4D & 3D</a></li>
-              <li><a href="#reservation" className="hover:text-coral">Réserver</a></li>
-            </ul>
-          </div>
+      <footer className='border-t border-border bg-card'>
+        <div className='mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3'>
+          <div><Logo /><p className='mt-4 max-w-xs text-sm text-muted-foreground'>Location de voitures & plaques d’immatriculation 4D / 3D Topaze. Le soleil, les clés, partez !</p></div>
+          <div><h4 className='font-display font-bold'>Contact</h4><ul className='mt-3 space-y-2 text-sm text-muted-foreground'><li>06 91 27 87 94</li><li>cocoloc97-1@outlook.fr</li><li>@coco.loc971</li></ul></div>
+          <div><h4 className='font-display font-bold'>Services</h4><ul className='mt-3 space-y-2 text-sm text-muted-foreground'><li>Location voitures</li><li>Plaques 4D & 3D</li><li>Réserver</li></ul></div>
         </div>
-        <div className="border-t border-border py-5 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Coco Loc 971 · Guadeloupe
-        </div>
+        <div className='border-t border-border py-5 text-center text-xs text-muted-foreground'>© {new Date().getFullYear()} Coco Loc 971 · Guadeloupe</div>
       </footer>
     </div>
   );
 }
 
 function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
-  return (
-    <div className="max-w-2xl">
-      <div className="inline-flex items-center gap-2 rounded-full bg-coral/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-coral">
-        {eyebrow}
-      </div>
-      <h2 className="mt-3 font-display text-4xl font-black tracking-tight sm:text-5xl">
-        {title}
-      </h2>
-    </div>
-  );
+  return <div className='max-w-2xl'><div className='inline-flex rounded-full bg-coral/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-coral'>{eyebrow}</div><h2 className='mt-3 font-display text-4xl font-black tracking-tight sm:text-5xl'>{title}</h2></div>;
+}
+
+function Price({ label, value }: { label: string; value: string }) {
+  return <div className='rounded-2xl border border-border bg-card px-5 py-3 text-center shadow-soft'><div className='text-[10px] uppercase tracking-wider text-muted-foreground'>{label}</div><div className='font-display text-2xl font-black text-palm'>{value}</div></div>;
+}
+
+function Notice({ children }: { children: string }) {
+  return <div className='rounded-2xl border-l-4 border-palm bg-palm/5 p-4 text-sm'><div className='flex gap-3'><Check className='mt-0.5 h-5 w-5 text-palm' />{children}</div></div>;
+}
+
+function TextField({ label, value, onChange, type = 'text', placeholder, required }: { label: string; value: string; onChange: (value: string) => void; type?: string; placeholder?: string; required?: boolean }) {
+  return <label className='text-sm font-medium'>{label}<input className={field} type={type} value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} required={required} /></label>;
+}
+
+function SelectField({ label, value, values, onChange }: { label: string; value: string; values: string[]; onChange: (value: string) => void }) {
+  return <label className='text-sm font-medium'>{label}<select className={field} value={value} onChange={(event) => onChange(event.target.value)}>{values.map((item) => <option key={item}>{item}</option>)}</select></label>;
+}
+
+function DateTime({ label, date, time, onDate, onTime }: { label: string; date: string; time: string; onDate: (value: string) => void; onTime: (value: string) => void }) {
+  return <div><div className='text-sm font-medium'>{label}</div><div className='mt-1.5 grid gap-2 sm:grid-cols-[1fr_auto]'><span className='relative'><CalendarDays className='pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' /><input type='date' className={`${field} mt-0 pl-10`} value={date} onChange={(event) => onDate(event.target.value)} required /></span><span className='relative sm:w-28'><Clock className='pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' /><input type='time' className={`${field} mt-0 pl-10`} value={time} onChange={(event) => onTime(event.target.value)} /></span></div></div>;
+}
+
+function SubmitButton({ children }: { children: string }) {
+  return <button type='submit' className='inline-flex h-14 items-center justify-center rounded-xl bg-coral text-base font-bold text-white shadow-glow'><Send className='mr-2 h-5 w-5' />{children}</button>;
+}
+
+function Logo() {
+  return <div className='flex items-center gap-2'><span className='grid h-10 w-10 place-items-center rounded-full bg-tropical text-white'><Sun className='h-5 w-5' /></span><span><span className='block font-display text-lg font-bold'>Coco Loc 971</span><span className='block text-[10px] tracking-widest text-muted-foreground'>GUADELOUPE</span></span></div>;
 }
