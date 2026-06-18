@@ -1,12 +1,14 @@
 # Coco Loc Sunshine
 
-Site vitrine Coco Loc 971 pour la location de voitures en Guadeloupe et les services de plaques 4D / 3D Topaze.
+Site Coco Loc 971 pour la location de voitures en Guadeloupe et les services de plaques 4D / 3D Topaze.
 
 ## Reservation
 
-La page propose deux modes de reservation :
+La page est maintenant presentee comme un vrai site de location de voiture :
 
-- Demande rapide pour une disponibilite, un depannage ou une demande directe via WhatsApp.
-- Reservation complete avec vehicule, dates, heures, lieux, options, paiement, confirmation et recapitulatif.
+- Moteur de recherche avec lieux, dates, heures, categorie et code promo.
+- Vehicules disponibles avec tarifs indicatifs calcules par pack.
+- Parcours de reservation avec conducteur, paiement, confirmation, options et recapitulatif.
+- Service plaques conserve comme option additionnelle.
 
-Derniere synchro demandee pour Lovable : parcours reservation poli et libelles a jour.
+Derniere synchro demandee pour Lovable : refonte type site de location de voiture, avec hero vehicule et reservation complete.
