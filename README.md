@@ -8,7 +8,7 @@ La page est maintenant plus simple et plus proche d'un vrai site de location de 
 
 - Premier ecran centre sur l'image de marque Coco Loc.
 - Parcours plus calme : dates, lieu, choix de voiture, demande WhatsApp.
-- Cartes vehicules avec photos reelles de Fiat Panda, Clio 4, Clio 5 et Renault Captur.
+- Cartes vehicules avec photos reelles de Fiat Panda, Twingo 3, Clio 4, Clio 5 et Renault Captur.
 - Service plaques conserve en section secondaire.
 
-Derniere synchro demandee pour Lovable : version simplifiee, marque d'abord, vraies photos voitures, moins d'options visibles.
+Derniere synchro demandee pour Lovable : ajout de la Twingo 3 pour afficher les 5 vehicules de la flotte.
