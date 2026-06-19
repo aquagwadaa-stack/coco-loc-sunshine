@@ -331,7 +331,7 @@ function Home() {
               <KeyRound className='h-5 w-5' />
             </span>
             <span>
-              <span className='block font-display text-lg font-black leading-none'>Coco Loc</span>
+              <span className='block font-display text-lg font-black leading-none'>Coco <span aria-hidden>🥥</span> Loc</span>
               <span className='text-[10px] font-bold uppercase tracking-widest text-muted-foreground'>Guadeloupe</span>
             </span>
           </a>
@@ -342,8 +342,8 @@ function Home() {
             <a href='#faq' className='hover:text-ocean'>FAQ</a>
             <a href='/plaques' className='hover:text-ocean'>Plaques</a>
           </nav>
-          <a href='#booking' className='inline-flex h-10 items-center gap-2 rounded-lg bg-coral px-4 text-sm font-black text-white'>
-            <CalendarCheck className='h-4 w-4' />Réserver
+          <a href='#booking' className='inline-flex h-10 items-center gap-2 rounded-lg bg-coral px-4 text-sm font-black text-white shadow-glow'>
+            <CalendarCheck className='h-4 w-4' />Réserver <span aria-hidden>🥥</span>
           </a>
         </div>
       </header>
