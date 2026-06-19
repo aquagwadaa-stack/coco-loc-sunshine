@@ -389,7 +389,7 @@ function Home() {
 
         <section id='cars' className='px-4 py-20 sm:px-6 lg:py-24'>
           <div className='mx-auto max-w-7xl'>
-            <SectionIntro eyebrow='Flotte Coco Loc' title='Choisissez votre véhicule' text='Cinq véhicules disponibles, des tarifs lisibles et les informations utiles avant de réserver.' />
+            <SectionIntro eyebrow='🥥 Flotte Coco Loc' title='Choisissez votre véhicule' text='Cinq véhicules disponibles, des tarifs lisibles et les informations utiles avant de réserver.' />
 
             <div className='mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
               {vehicles.map((item) => (
