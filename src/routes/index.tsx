@@ -357,7 +357,7 @@ function Home() {
               Location de voitures en Guadeloupe
             </p>
             <h1 className='mt-6 font-display text-6xl font-black leading-[0.94] tracking-tight sm:text-8xl'>
-              Coco Loc
+              Coco <span aria-hidden className='inline-block -rotate-12'>🥥</span> Loc
             </h1>
             <p className='mt-6 max-w-xl text-lg leading-8 text-muted-foreground'>
               Réservez votre véhicule pour l’aéroport, vos déplacements professionnels ou votre séjour sur l’île.
