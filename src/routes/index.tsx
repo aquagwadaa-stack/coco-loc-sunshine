@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { type FormEvent, useMemo, useState } from 'react';
+import { type FormEvent, useEffect, useMemo, useState } from 'react';
 import {
   Baby,
   BadgeCheck,
@@ -217,6 +217,8 @@ const field =
   'mt-2 h-12 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none transition focus:border-ocean focus:ring-2 focus:ring-ocean/15';
 const card = 'rounded-2xl border border-border bg-card shadow-soft';
 const dayMs = 24 * 60 * 60 * 1000;
+const initialPickupDate = '2026-06-21';
+const initialReturnDate = '2026-06-28';
 
 function toInputDate(date: Date) {
   const year = date.getFullYear();
@@ -272,8 +274,8 @@ function estimatePrice(vehicle: Vehicle, days: number) {
 }
 
 function Home() {
-  const [pickupDate, setPickupDate] = useState(dateOffset(2));
-  const [returnDate, setReturnDate] = useState(dateOffset(9));
+  const [pickupDate, setPickupDate] = useState(initialPickupDate);
+  const [returnDate, setReturnDate] = useState(initialReturnDate);
   const [pickupTime, setPickupTime] = useState('09:00');
   const [returnTime, setReturnTime] = useState('09:00');
   const [pickupLocation, setPickupLocation] = useState('Aéroport Guadeloupe Maryse Condé');
@@ -298,6 +300,11 @@ function Home() {
     note: '',
   });
   const [plateRequestRef, setPlateRequestRef] = useState('');
+
+  useEffect(() => {
+    setPickupDate(dateOffset(2));
+    setReturnDate(dateOffset(9));
+  }, []);
 
   const vehicle = vehicles.find((item) => item.name === selectedVehicle) ?? vehicles[1];
   const days = rentalDays(pickupDate, returnDate);
