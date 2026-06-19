@@ -2,13 +2,14 @@
 
 Site Coco Loc 971 pour la location de voitures en Guadeloupe et les services de plaques 4D / 3D Topaze.
 
-## Reservation
+## Réservation
 
-La page est maintenant plus simple et plus proche d'un vrai site de location de voiture :
+La page présente maintenant un parcours de location complet, proche d'un site de réservation automobile :
 
-- Premier ecran centre sur l'image de marque Coco Loc.
-- Parcours plus calme : dates, lieu, choix de voiture, demande WhatsApp.
-- Cartes vehicules avec photos reelles de Fiat Panda, Twingo 3, Clio 4, Clio 5 et Renault Captur.
-- Service plaques conserve en section secondaire.
+- Premier écran centré sur l'image de marque Coco Loc.
+- Moteur de réservation avec dates, horaires, prise en charge et restitution.
+- Flotte de 5 véhicules : Fiat Panda, Twingo 3, Clio 4, Clio 5 automatique et Renault Captur.
+- Planning de disponibilité, options, conducteur, paiement et confirmation de réservation.
+- Section plaques conservée avec un wording public et professionnel.
 
-Derniere synchro demandee pour Lovable : ajout de la Twingo 3 pour afficher les 5 vehicules de la flotte.
+Dernière synchro demandée pour Lovable : remplacement du parcours WhatsApp par une réservation en ligne propre et publiable.
