@@ -252,13 +252,13 @@ const faqItems = [
 const extras = [
   { id: 'siege-enfant', title: 'Siège enfant', price: 15, icon: Baby },
   { id: 'conducteur-additionnel', title: 'Conducteur additionnel', price: 20, icon: User },
-  { id: 'livraison-zone', title: 'Livraison hors agence', price: 25, icon: Plane },
+  { id: 'livraison-zone', title: 'Livraison personnalisée', price: 25, icon: Plane },
 ];
 
 const paymentMethods = [
   'Carte bancaire à la confirmation',
   'Acompte puis solde à la remise',
-  'Paiement en agence',
+  'Solde à la livraison',
 ];
 
 const field =
