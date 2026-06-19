@@ -387,6 +387,46 @@ function Home() {
           </div>
         </section>
 
+        <section id='cars' className='px-4 py-20 sm:px-6 lg:py-24'>
+          <div className='mx-auto max-w-7xl'>
+            <SectionIntro eyebrow='Flotte Coco Loc' title='Choisissez votre véhicule' text='Cinq véhicules disponibles, des tarifs lisibles et les informations utiles avant de réserver.' />
+
+            <div className='mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
+              {vehicles.map((item) => (
+                <article key={item.name} className={`${card} overflow-hidden ${selectedVehicle === item.name ? 'ring-2 ring-ocean' : ''}`}>
+                  <img src={item.image} alt={item.alt} className='h-52 w-full bg-muted object-cover' />
+                  <div className='p-5'>
+                    <div className='text-xs font-black uppercase tracking-widest text-coral'>{item.range}</div>
+                    <h3 className='mt-2 font-display text-2xl font-black'>{item.name}</h3>
+                    <div className='mt-4 grid gap-2 text-sm text-muted-foreground'>
+                      <Spec icon={User} text={item.seats} />
+                      <Spec icon={Car} text={item.gearbox} />
+                      <Spec icon={Briefcase} text={item.luggage} />
+                    </div>
+                    <div className='mt-5 flex items-end justify-between gap-3'>
+                      <div>
+                        <p className='text-xs font-bold uppercase tracking-widest text-muted-foreground'>Week-end</p>
+                        <p className='font-display text-4xl font-black text-ocean'>{item.packages.weekend}€</p>
+                        <p className='text-xs font-semibold text-muted-foreground'>7 jours : {item.packages.week}€</p>
+                      </div>
+                      <button
+                        type='button'
+                        onClick={() => {
+                          setSelectedVehicle(item.name);
+                          document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className='inline-flex h-11 items-center rounded-lg bg-coral px-4 text-sm font-black text-white'
+                      >
+                        Choisir
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section id='booking' className='bg-muted/45 px-4 py-20 sm:px-6 lg:py-24'>
           <div className='mx-auto max-w-7xl'>
             <SectionIntro
@@ -526,46 +566,6 @@ function Home() {
                   </div>
                 )}
               </form>
-            </div>
-          </div>
-        </section>
-
-        <section id='cars' className='px-4 py-20 sm:px-6 lg:py-24'>
-          <div className='mx-auto max-w-7xl'>
-            <SectionIntro eyebrow='Flotte Coco Loc' title='Choisissez votre véhicule' text='Cinq véhicules disponibles, des tarifs lisibles et les informations utiles avant de réserver.' />
-
-            <div className='mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
-              {vehicles.map((item) => (
-                <article key={item.name} className={`${card} overflow-hidden ${selectedVehicle === item.name ? 'ring-2 ring-ocean' : ''}`}>
-                  <img src={item.image} alt={item.alt} className='h-52 w-full bg-muted object-cover' />
-                  <div className='p-5'>
-                    <div className='text-xs font-black uppercase tracking-widest text-coral'>{item.range}</div>
-                    <h3 className='mt-2 font-display text-2xl font-black'>{item.name}</h3>
-                    <div className='mt-4 grid gap-2 text-sm text-muted-foreground'>
-                      <Spec icon={User} text={item.seats} />
-                      <Spec icon={Car} text={item.gearbox} />
-                      <Spec icon={Briefcase} text={item.luggage} />
-                    </div>
-                    <div className='mt-5 flex items-end justify-between gap-3'>
-                      <div>
-                        <p className='text-xs font-bold uppercase tracking-widest text-muted-foreground'>Week-end</p>
-                        <p className='font-display text-4xl font-black text-ocean'>{item.packages.weekend}€</p>
-                        <p className='text-xs font-semibold text-muted-foreground'>7 jours : {item.packages.week}€</p>
-                      </div>
-                      <button
-                        type='button'
-                        onClick={() => {
-                          setSelectedVehicle(item.name);
-                          document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                        className='inline-flex h-11 items-center rounded-lg bg-coral px-4 text-sm font-black text-white'
-                      >
-                        Choisir
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              ))}
             </div>
           </div>
         </section>
