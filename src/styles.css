@@ -131,5 +131,31 @@
 @utility bg-tropical { background: var(--gradient-tropical); }
 @utility bg-sunset { background: var(--gradient-sunset); }
 @utility bg-sea { background: var(--gradient-sea); }
+@utility bg-madras-soft {
+  background-color: color-mix(in oklab, var(--sand) 78%, var(--sun));
+  background-image:
+    repeating-linear-gradient(90deg,
+      color-mix(in oklab, var(--coral) 28%, transparent) 0 4px,
+      transparent 4px 72px,
+      color-mix(in oklab, var(--sun) 34%, transparent) 72px 77px,
+      transparent 77px 132px),
+    repeating-linear-gradient(0deg,
+      color-mix(in oklab, var(--palm) 18%, transparent) 0 3px,
+      transparent 3px 84px,
+      color-mix(in oklab, var(--destructive) 18%, transparent) 84px 88px,
+      transparent 88px 150px),
+    radial-gradient(40rem 24rem at 85% 8%, color-mix(in oklab, var(--coral) 30%, transparent), transparent 62%),
+    radial-gradient(36rem 22rem at 12% 18%, color-mix(in oklab, var(--palm) 18%, transparent), transparent 62%);
+}
+@utility bg-madras-ribbon {
+  background:
+    linear-gradient(90deg,
+      var(--coral) 0 18%,
+      var(--sun) 18% 36%,
+      var(--palm) 36% 49%,
+      var(--destructive) 49% 64%,
+      var(--ocean) 64% 78%,
+      var(--sun) 78% 100%);
+}
 @utility shadow-soft { box-shadow: var(--shadow-soft); }
 @utility shadow-glow { box-shadow: var(--shadow-glow); }
