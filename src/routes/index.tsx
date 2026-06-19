@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { type FormEvent, useEffect, useMemo, useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import {
   Baby,
   BadgeCheck,
@@ -61,7 +61,6 @@ type Vehicle = {
     week: number;
     longStay: number;
   };
-  busyOffsets: number[];
 };
 
 const locations = [
@@ -83,7 +82,6 @@ const vehicles: Vehicle[] = [
     gearbox: 'Manuelle',
     luggage: '2 bagages',
     packages: { weekend: 60, threeDays: 70, week: 130, longStay: 280 },
-    busyOffsets: [-1, 5],
   },
   {
     name: 'Twingo 3',
@@ -94,7 +92,6 @@ const vehicles: Vehicle[] = [
     gearbox: 'Manuelle',
     luggage: '2 bagages',
     packages: { weekend: 60, threeDays: 70, week: 130, longStay: 280 },
-    busyOffsets: [4],
   },
   {
     name: 'Clio 4',
@@ -105,7 +102,6 @@ const vehicles: Vehicle[] = [
     gearbox: 'Manuelle',
     luggage: '3 bagages',
     packages: { weekend: 75, threeDays: 85, week: 150, longStay: 300 },
-    busyOffsets: [-2, 6],
   },
   {
     name: 'Clio 5 automatique',
@@ -116,7 +112,6 @@ const vehicles: Vehicle[] = [
     gearbox: 'Auto',
     luggage: '3 bagages',
     packages: { weekend: 85, threeDays: 95, week: 170, longStay: 330 },
-    busyOffsets: [3],
   },
   {
     name: 'Renault Captur',
@@ -127,7 +122,6 @@ const vehicles: Vehicle[] = [
     gearbox: 'Manuelle',
     luggage: '4 bagages',
     packages: { weekend: 95, threeDays: 105, week: 190, longStay: 360 },
-    busyOffsets: [-1, 7],
   },
 ];
 
@@ -157,6 +151,27 @@ const serviceHighlights = [
     icon: ShieldCheck,
     title: 'Location sereine',
     text: 'Assurance incluse, kilométrage illimité et véhicules adaptés aux routes de Guadeloupe.',
+  },
+];
+
+const practicalOffers = [
+  {
+    icon: Wrench,
+    title: 'Pack dépannage locaux',
+    text: 'Une solution courte durée pour les locaux qui ont besoin d’un véhicule rapidement.',
+    detail: '2 jours : 50€ · 3 jours : 70€',
+  },
+  {
+    icon: CalendarDays,
+    title: 'Long séjour',
+    text: 'Tarif adapté pour les séjours de deux semaines, avec un véhicule réservé sur la durée.',
+    detail: '14 jours : à partir de 280€',
+  },
+  {
+    icon: CreditCard,
+    title: 'Caution et acompte',
+    text: 'La réservation peut être bloquée avec un acompte, puis le solde est réglé à la remise.',
+    detail: 'Paiement clair avant départ',
   },
 ];
 
@@ -201,6 +216,39 @@ const plateOffers = [
   },
 ];
 
+const faqItems = [
+  {
+    question: 'Quel âge faut-il pour louer une voiture ?',
+    answer:
+      'L’âge du conducteur est demandé pendant la réservation afin de vérifier les conditions selon le véhicule choisi.',
+  },
+  {
+    question: 'Quels documents prévoir ?',
+    answer:
+      'Un permis de conduire valide, une pièce d’identité et le moyen de paiement prévu pour la réservation ou la caution.',
+  },
+  {
+    question: 'La livraison à domicile est-elle possible ?',
+    answer:
+      'Oui, la livraison peut être organisée selon le secteur et l’horaire demandé. Le lieu se précise dans le formulaire.',
+  },
+  {
+    question: 'Peut-on prolonger la location ?',
+    answer:
+      'La prolongation dépend des disponibilités du véhicule. Il suffit de prévenir avant la date de retour prévue.',
+  },
+  {
+    question: 'Le kilométrage est-il inclus ?',
+    answer:
+      'Oui, le kilométrage illimité est mis en avant pour permettre de circuler librement sur l’île.',
+  },
+  {
+    question: 'Comment fonctionne le pack dépannage ?',
+    answer:
+      'Le pack dépannage est pensé pour les besoins courts des locaux : 2 jours à 50€ ou 3 jours à 70€.',
+  },
+];
+
 const extras = [
   { id: 'siege-enfant', title: 'Siège enfant', price: 15, icon: Baby },
   { id: 'conducteur-additionnel', title: 'Conducteur additionnel', price: 20, icon: User },
@@ -217,8 +265,6 @@ const field =
   'mt-2 h-12 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none transition focus:border-ocean focus:ring-2 focus:ring-ocean/15';
 const card = 'rounded-2xl border border-border bg-card shadow-soft';
 const dayMs = 24 * 60 * 60 * 1000;
-const initialPickupDate = '2026-06-21';
-const initialReturnDate = '2026-06-28';
 
 function toInputDate(date: Date) {
   const year = date.getFullYear();
@@ -236,20 +282,6 @@ function dateOffset(days: number) {
   const date = new Date();
   date.setDate(date.getDate() + days);
   return toInputDate(date);
-}
-
-function addDays(value: string, days: number) {
-  const date = parseDate(value);
-  date.setDate(date.getDate() + days);
-  return toInputDate(date);
-}
-
-function formatShortDate(value: string) {
-  return new Intl.DateTimeFormat('fr-FR', {
-    weekday: 'short',
-    day: '2-digit',
-    month: 'short',
-  }).format(parseDate(value));
 }
 
 function rentalDays(start: string, end: string) {
@@ -274,8 +306,8 @@ function estimatePrice(vehicle: Vehicle, days: number) {
 }
 
 function Home() {
-  const [pickupDate, setPickupDate] = useState(initialPickupDate);
-  const [returnDate, setReturnDate] = useState(initialReturnDate);
+  const [pickupDate, setPickupDate] = useState(dateOffset(2));
+  const [returnDate, setReturnDate] = useState(dateOffset(9));
   const [pickupTime, setPickupTime] = useState('09:00');
   const [returnTime, setReturnTime] = useState('09:00');
   const [pickupLocation, setPickupLocation] = useState('Aéroport Guadeloupe Maryse Condé');
@@ -289,6 +321,7 @@ function Home() {
     lastName: '',
     email: '',
     phone: '',
+    age: '25',
     flight: '',
     note: '',
   });
@@ -301,11 +334,6 @@ function Home() {
   });
   const [plateRequestRef, setPlateRequestRef] = useState('');
 
-  useEffect(() => {
-    setPickupDate(dateOffset(2));
-    setReturnDate(dateOffset(9));
-  }, []);
-
   const vehicle = vehicles.find((item) => item.name === selectedVehicle) ?? vehicles[1];
   const days = rentalDays(pickupDate, returnDate);
   const basePrice = estimatePrice(vehicle, days);
@@ -314,20 +342,6 @@ function Home() {
     return total + (extra?.price ?? 0);
   }, 0);
   const total = basePrice + extrasTotal;
-
-  const planning = useMemo(() => {
-    return Array.from({ length: 10 }, (_, index) => {
-      const offset = index - 2;
-      const value = addDays(pickupDate, offset);
-      const selected = value >= pickupDate && value < returnDate;
-      const busy = vehicle.busyOffsets.includes(offset);
-      return {
-        value,
-        selected,
-        status: selected ? 'Votre séjour' : busy ? 'Réservé' : 'Disponible',
-      };
-    });
-  }, [pickupDate, returnDate, vehicle]);
 
   function updateDriver(key: keyof typeof driver, value: string) {
     setDriver((current) => ({ ...current, [key]: value }));
@@ -435,6 +449,20 @@ function Home() {
                 </article>
               ))}
             </div>
+            <div className='mt-6 grid gap-4 lg:grid-cols-3'>
+              {practicalOffers.map((item) => (
+                <article key={item.title} className='rounded-2xl border border-border bg-muted/45 p-5'>
+                  <div className='flex items-start gap-4'>
+                    <item.icon className='mt-1 h-6 w-6 text-coral' />
+                    <div>
+                      <h3 className='font-display text-2xl font-black'>{item.title}</h3>
+                      <p className='mt-2 text-sm leading-6 text-muted-foreground'>{item.text}</p>
+                      <p className='mt-3 text-sm font-black text-ocean'>{item.detail}</p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -493,30 +521,6 @@ function Home() {
                     <Summary label='Retour' value={`${returnLocation} · ${returnDate} · ${returnTime}`} />
                     <Summary label='Durée' value={`${days} jour${days > 1 ? 's' : ''} · ${packageLabel(days)}`} />
                     <Summary label='Total estimé' value={`${total}€`} highlight />
-                  </div>
-
-                  <div className='mt-7'>
-                    <div className='flex items-center justify-between gap-4'>
-                      <h3 className='font-display text-2xl font-black'>Planning</h3>
-                      <span className='rounded-full bg-palm/12 px-3 py-1 text-xs font-black text-palm'>Disponibilité</span>
-                    </div>
-                    <div className='mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5'>
-                      {planning.map((day) => (
-                        <div
-                          key={day.value}
-                          className={`rounded-lg border p-3 text-sm ${
-                            day.selected
-                              ? 'border-ocean bg-ocean text-white'
-                              : day.status === 'Réservé'
-                                ? 'border-border bg-muted text-muted-foreground'
-                                : 'border-border bg-background'
-                          }`}
-                        >
-                          <p className='font-black capitalize'>{formatShortDate(day.value)}</p>
-                          <p className='mt-1 text-xs font-bold opacity-80'>{day.status}</p>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </div>
               </aside>
@@ -583,6 +587,10 @@ function Home() {
                     <label className='text-sm font-bold'>
                       Téléphone
                       <input className={field} type='tel' value={driver.phone} onChange={(event) => updateDriver('phone', event.target.value)} required />
+                    </label>
+                    <label className='text-sm font-bold'>
+                      Âge du conducteur
+                      <input className={field} type='number' min='18' max='90' value={driver.age} onChange={(event) => updateDriver('age', event.target.value)} required />
                     </label>
                     <label className='text-sm font-bold'>
                       Vol ou arrivée
@@ -659,6 +667,24 @@ function Home() {
                   <item.icon className='h-6 w-6 text-palm' />
                   <p className='font-black'>{item.title}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className='bg-card px-4 py-16 sm:px-6 lg:py-20'>
+          <div className='mx-auto max-w-7xl'>
+            <SectionIntro
+              eyebrow='FAQ'
+              title='Bon à savoir avant de louer'
+              text='Les réponses utiles avant de confirmer une réservation, sans avoir besoin de chercher les conditions ailleurs.'
+            />
+            <div className='mt-9 grid gap-4 md:grid-cols-2'>
+              {faqItems.map((item) => (
+                <article key={item.question} className='rounded-2xl border border-border bg-background p-5'>
+                  <h3 className='font-display text-2xl font-black'>{item.question}</h3>
+                  <p className='mt-3 text-sm leading-6 text-muted-foreground'>{item.answer}</p>
+                </article>
               ))}
             </div>
           </div>
