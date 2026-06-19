@@ -387,7 +387,9 @@ function Home() {
           </div>
         </section>
 
-        <section id='cars' className='px-4 py-20 sm:px-6 lg:py-24'>
+        <section id='cars' className='relative overflow-hidden px-4 py-20 sm:px-6 lg:py-24 bg-madras-soft'>
+          <div className='absolute inset-x-0 top-0 h-2 bg-madras-ribbon' aria-hidden />
+          <div className='absolute right-6 top-10 hidden text-6xl opacity-20 lg:block' aria-hidden>🥥</div>
           <div className='mx-auto max-w-7xl'>
             <SectionIntro eyebrow='🥥 Flotte Coco Loc' title='Choisissez votre véhicule' text='Cinq véhicules disponibles, des tarifs lisibles et les informations utiles avant de réserver.' />
 
