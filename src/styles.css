@@ -44,33 +44,33 @@
 
 :root {
   --radius: 1rem;
-  --background: oklch(0.94 0.07 75);
+  --background: oklch(0.99 0.01 90);
   --foreground: oklch(0.22 0.06 230);
 
-  --card: oklch(0.99 0.018 85);
+  --card: oklch(1 0 0);
   --card-foreground: oklch(0.22 0.06 230);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.06 230);
 
-  --ocean: oklch(0.55 0.18 230);
-  --palm: oklch(0.62 0.18 150);
-  --sun: oklch(0.85 0.19 90);
-  --coral: oklch(0.68 0.22 30);
-  --sand: oklch(0.92 0.075 75);
+  --ocean: oklch(0.55 0.16 230);
+  --palm: oklch(0.62 0.16 150);
+  --sun: oklch(0.85 0.17 90);
+  --coral: oklch(0.7 0.19 35);
+  --sand: oklch(0.97 0.03 85);
 
-  --primary: oklch(0.55 0.18 230);
+  --primary: oklch(0.55 0.16 230);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.62 0.18 150);
+  --secondary: oklch(0.62 0.16 150);
   --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.92 0.06 75);
+  --muted: oklch(0.96 0.02 90);
   --muted-foreground: oklch(0.45 0.04 230);
-  --accent: oklch(0.68 0.22 30);
+  --accent: oklch(0.7 0.19 35);
   --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.58 0.24 25);
+  --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.84 0.06 75);
-  --input: oklch(0.9 0.045 75);
-  --ring: oklch(0.55 0.18 230);
+  --border: oklch(0.9 0.02 90);
+  --input: oklch(0.92 0.02 90);
+  --ring: oklch(0.55 0.16 230);
 
   --gradient-tropical: linear-gradient(135deg, var(--ocean) 0%, var(--palm) 50%, var(--sun) 100%);
   --gradient-sunset: linear-gradient(135deg, var(--coral) 0%, var(--sun) 100%);
@@ -103,24 +103,6 @@
   * { border-color: var(--color-border); }
   body {
     background-color: var(--color-background);
-    background-image:
-      /* Madras plaid stripes — diagonal */
-      repeating-linear-gradient(45deg,
-        color-mix(in oklab, var(--coral) 10%, transparent) 0 2px,
-        transparent 2px 64px),
-      repeating-linear-gradient(-45deg,
-        color-mix(in oklab, var(--palm) 9%, transparent) 0 2px,
-        transparent 2px 80px),
-      repeating-linear-gradient(90deg,
-        color-mix(in oklab, var(--sun) 8%, transparent) 0 3px,
-        transparent 3px 120px),
-      /* warm glow blobs */
-      radial-gradient(48rem 34rem at 108% -8%, color-mix(in oklab, var(--coral) 60%, transparent), transparent 60%),
-      radial-gradient(42rem 30rem at -8% 18%, color-mix(in oklab, var(--palm) 45%, transparent), transparent 60%),
-      radial-gradient(52rem 36rem at 50% 115%, color-mix(in oklab, var(--sun) 55%, transparent), transparent 60%),
-      radial-gradient(36rem 26rem at 92% 58%, color-mix(in oklab, var(--destructive) 38%, transparent), transparent 65%),
-      radial-gradient(32rem 24rem at 12% 78%, color-mix(in oklab, var(--ocean) 28%, transparent), transparent 65%);
-    background-attachment: fixed;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -131,31 +113,15 @@
 @utility bg-tropical { background: var(--gradient-tropical); }
 @utility bg-sunset { background: var(--gradient-sunset); }
 @utility bg-sea { background: var(--gradient-sea); }
-@utility bg-madras-soft {
-  background-color: color-mix(in oklab, var(--sand) 78%, var(--sun));
-  background-image:
-    repeating-linear-gradient(90deg,
-      color-mix(in oklab, var(--coral) 28%, transparent) 0 4px,
-      transparent 4px 72px,
-      color-mix(in oklab, var(--sun) 34%, transparent) 72px 77px,
-      transparent 77px 132px),
-    repeating-linear-gradient(0deg,
-      color-mix(in oklab, var(--palm) 18%, transparent) 0 3px,
-      transparent 3px 84px,
-      color-mix(in oklab, var(--destructive) 18%, transparent) 84px 88px,
-      transparent 88px 150px),
-    radial-gradient(40rem 24rem at 85% 8%, color-mix(in oklab, var(--coral) 30%, transparent), transparent 62%),
-    radial-gradient(36rem 22rem at 12% 18%, color-mix(in oklab, var(--palm) 18%, transparent), transparent 62%);
-}
-@utility bg-madras-ribbon {
-  background:
-    linear-gradient(90deg,
-      var(--coral) 0 18%,
-      var(--sun) 18% 36%,
-      var(--palm) 36% 49%,
-      var(--destructive) 49% 64%,
-      var(--ocean) 64% 78%,
-      var(--sun) 78% 100%);
+@utility bg-madras-line {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--destructive) 72%, white) 0 16%,
+    color-mix(in oklab, var(--coral) 76%, white) 16% 35%,
+    color-mix(in oklab, var(--sun) 76%, white) 35% 54%,
+    color-mix(in oklab, var(--palm) 62%, white) 54% 72%,
+    color-mix(in oklab, var(--ocean) 44%, white) 72% 100%
+  );
 }
 @utility shadow-soft { box-shadow: var(--shadow-soft); }
 @utility shadow-glow { box-shadow: var(--shadow-glow); }
