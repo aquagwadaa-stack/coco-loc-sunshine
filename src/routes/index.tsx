@@ -325,6 +325,7 @@ function Home() {
   return (
     <div className='min-h-screen bg-background'>
       <header className='fixed top-0 z-50 w-full border-b border-border/60 bg-background/90 backdrop-blur-md'>
+        <div className='absolute inset-x-0 bottom-0 h-[2px] bg-madras-line opacity-70' aria-hidden />
         <div className='mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6'>
           <a href='#top' className='flex items-center gap-2'>
             <span className='grid h-10 w-10 place-items-center rounded-lg bg-ocean text-white'>
@@ -336,14 +337,14 @@ function Home() {
             </span>
           </a>
           <nav className='hidden items-center gap-7 text-sm font-bold md:flex'>
-            <a href='#booking' className='hover:text-ocean'>Réservation</a>
             <a href='#cars' className='hover:text-ocean'>Véhicules</a>
+            <a href='#booking' className='hover:text-ocean'>Réservation</a>
             <a href='#services' className='hover:text-ocean'>Services</a>
             <a href='#faq' className='hover:text-ocean'>FAQ</a>
             <a href='/plaques' className='hover:text-ocean'>Plaques</a>
           </nav>
-          <a href='#booking' className='inline-flex h-10 items-center gap-2 rounded-lg bg-coral px-4 text-sm font-black text-white shadow-glow'>
-            <CalendarCheck className='h-4 w-4' />Réserver <span aria-hidden>🥥</span>
+          <a href='#booking' className='inline-flex h-10 items-center gap-2 rounded-lg bg-coral px-4 text-sm font-black text-white'>
+            <CalendarCheck className='h-4 w-4' />Réserver
           </a>
         </div>
       </header>
@@ -387,11 +388,10 @@ function Home() {
           </div>
         </section>
 
-        <section id='cars' className='relative overflow-hidden px-4 py-20 sm:px-6 lg:py-24 bg-madras-soft'>
-          <div className='absolute inset-x-0 top-0 h-2 bg-madras-ribbon' aria-hidden />
-          <div className='absolute right-6 top-10 hidden text-6xl opacity-20 lg:block' aria-hidden>🥥</div>
+        <section id='cars' className='relative px-4 py-20 sm:px-6 lg:py-24'>
+          <div className='absolute inset-x-0 top-0 h-1 bg-madras-line' aria-hidden />
           <div className='mx-auto max-w-7xl'>
-            <SectionIntro eyebrow='🥥 Flotte Coco Loc' title='Choisissez votre véhicule' text='Cinq véhicules disponibles, des tarifs lisibles et les informations utiles avant de réserver.' />
+            <SectionIntro eyebrow='Flotte Coco Loc' title='Choisissez votre véhicule' text='Cinq véhicules disponibles, des tarifs lisibles et les informations utiles avant de réserver.' />
 
             <div className='mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
               {vehicles.map((item) => (
