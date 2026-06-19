@@ -85,7 +85,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Coco Loc 971 propose la location de voitures en Guadeloupe, la livraison à domicile et la pose de plaques 4D / 3D Topaze.",
       },
       { name: "author", content: "Coco Loc 971" },
-      { property: "og:title", content: "Coco Loc 971 — Le soleil, les clés, partez !" },
+      { property: "og:title", content: "Coco Loc 971 — Location voiture & plaques en Guadeloupe" },
       {
         property: "og:description",
         content:
@@ -94,6 +94,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@coco.loc971" },
+      { name: "twitter:title", content: "Coco Loc 971 — Location voiture & plaques en Guadeloupe" },
+      { name: "description", content: "Coco Loc Sunshine is a modern, tropical website for car rentals and custom license plate sales." },
+      { property: "og:description", content: "Coco Loc Sunshine is a modern, tropical website for car rentals and custom license plate sales." },
+      { name: "twitter:description", content: "Coco Loc Sunshine is a modern, tropical website for car rentals and custom license plate sales." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3157342f-31ba-46b1-8a51-e0fa0a95b23a/id-preview-ce7b6b34--8796f774-d268-475b-b92a-30efb03ea0ff.lovable.app-1781883150216.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3157342f-31ba-46b1-8a51-e0fa0a95b23a/id-preview-ce7b6b34--8796f774-d268-475b-b92a-30efb03ea0ff.lovable.app-1781883150216.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
