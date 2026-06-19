@@ -44,10 +44,10 @@
 
 :root {
   --radius: 1rem;
-  --background: oklch(0.99 0.01 90);
+  --background: oklch(0.975 0.025 85);
   --foreground: oklch(0.22 0.06 230);
 
-  --card: oklch(1 0 0);
+  --card: oklch(0.995 0.012 85);
   --card-foreground: oklch(0.22 0.06 230);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.06 230);
@@ -56,20 +56,20 @@
   --palm: oklch(0.62 0.16 150);
   --sun: oklch(0.85 0.17 90);
   --coral: oklch(0.7 0.19 35);
-  --sand: oklch(0.97 0.03 85);
+  --sand: oklch(0.95 0.045 80);
 
   --primary: oklch(0.55 0.16 230);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.62 0.16 150);
   --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.96 0.02 90);
+  --muted: oklch(0.94 0.035 80);
   --muted-foreground: oklch(0.45 0.04 230);
   --accent: oklch(0.7 0.19 35);
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.9 0.02 90);
-  --input: oklch(0.92 0.02 90);
+  --border: oklch(0.88 0.03 80);
+  --input: oklch(0.92 0.025 80);
   --ring: oklch(0.55 0.16 230);
 
   --gradient-tropical: linear-gradient(135deg, var(--ocean) 0%, var(--palm) 50%, var(--sun) 100%);
@@ -103,6 +103,11 @@
   * { border-color: var(--color-border); }
   body {
     background-color: var(--color-background);
+    background-image:
+      radial-gradient(60rem 40rem at 110% -10%, color-mix(in oklab, var(--coral) 18%, transparent), transparent 60%),
+      radial-gradient(50rem 35rem at -10% 20%, color-mix(in oklab, var(--palm) 14%, transparent), transparent 60%),
+      radial-gradient(45rem 30rem at 50% 120%, color-mix(in oklab, var(--sun) 16%, transparent), transparent 60%);
+    background-attachment: fixed;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;

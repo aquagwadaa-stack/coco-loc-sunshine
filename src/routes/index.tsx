@@ -331,7 +331,7 @@ function Home() {
               <KeyRound className='h-5 w-5' />
             </span>
             <span>
-              <span className='block font-display text-lg font-black leading-none'>Coco Loc</span>
+              <span className='block font-display text-lg font-black leading-none'>Coco <span aria-hidden>🥥</span> Loc</span>
               <span className='text-[10px] font-bold uppercase tracking-widest text-muted-foreground'>Guadeloupe</span>
             </span>
           </a>
@@ -342,8 +342,8 @@ function Home() {
             <a href='#faq' className='hover:text-ocean'>FAQ</a>
             <a href='/plaques' className='hover:text-ocean'>Plaques</a>
           </nav>
-          <a href='#booking' className='inline-flex h-10 items-center gap-2 rounded-lg bg-coral px-4 text-sm font-black text-white'>
-            <CalendarCheck className='h-4 w-4' />Réserver
+          <a href='#booking' className='inline-flex h-10 items-center gap-2 rounded-lg bg-coral px-4 text-sm font-black text-white shadow-glow'>
+            <CalendarCheck className='h-4 w-4' />Réserver <span aria-hidden>🥥</span>
           </a>
         </div>
       </header>
@@ -357,7 +357,7 @@ function Home() {
               Location de voitures en Guadeloupe
             </p>
             <h1 className='mt-6 font-display text-6xl font-black leading-[0.94] tracking-tight sm:text-8xl'>
-              Coco Loc
+              Coco <span aria-hidden className='inline-block -rotate-12'>🥥</span> Loc
             </h1>
             <p className='mt-6 max-w-xl text-lg leading-8 text-muted-foreground'>
               Réservez votre véhicule pour l’aéroport, vos déplacements professionnels ou votre séjour sur l’île.
@@ -389,7 +389,7 @@ function Home() {
 
         <section id='cars' className='px-4 py-20 sm:px-6 lg:py-24'>
           <div className='mx-auto max-w-7xl'>
-            <SectionIntro eyebrow='Flotte Coco Loc' title='Choisissez votre véhicule' text='Cinq véhicules disponibles, des tarifs lisibles et les informations utiles avant de réserver.' />
+            <SectionIntro eyebrow='🥥 Flotte Coco Loc' title='Choisissez votre véhicule' text='Cinq véhicules disponibles, des tarifs lisibles et les informations utiles avant de réserver.' />
 
             <div className='mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
               {vehicles.map((item) => (
