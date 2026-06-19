@@ -7,16 +7,12 @@ import {
   CalendarCheck,
   CalendarDays,
   Car,
-  Check,
   ChevronRight,
-  Clock,
   CreditCard,
-  FileText,
   Gauge,
   Home as HomeIcon,
   KeyRound,
   Mail,
-  MapPin,
   Phone,
   Plane,
   ShieldCheck,
@@ -24,7 +20,6 @@ import {
   Wrench,
 } from 'lucide-react';
 import heroImg from '@/assets/hero-tropical.jpg';
-import plaqueImg from '@/assets/plaque-4d.jpg';
 
 export const Route = createFileRoute('/')({
   head: () => ({
@@ -193,29 +188,6 @@ const bookingSteps = [
   },
 ];
 
-const plateOffers = [
-  {
-    title: 'Pack 2 plaques 4D',
-    price: 55,
-    details: ['2 plaques 4D', 'Dépose ancienne plaque', 'Pose comprise'],
-  },
-  {
-    title: 'Pack 2 plaques 3D Topaze',
-    price: 65,
-    details: ['2 plaques 3D Topaze', 'Dépose ancienne plaque', 'Pose comprise'],
-  },
-  {
-    title: 'Plaque 4D simple',
-    price: 29,
-    details: ['1 plaque 4D', 'Dépose ancienne plaque', 'Pose comprise'],
-  },
-  {
-    title: 'Plaque 3D Topaze simple',
-    price: 35,
-    details: ['1 plaque 3D Topaze', 'Dépose ancienne plaque', 'Pose comprise'],
-  },
-];
-
 const faqItems = [
   {
     question: 'Quel âge faut-il pour louer une voiture ?',
@@ -325,15 +297,6 @@ function Home() {
     flight: '',
     note: '',
   });
-  const [plateRequest, setPlateRequest] = useState({
-    name: '',
-    phone: '',
-    offer: plateOffers[0].title,
-    plateNumber: '',
-    note: '',
-  });
-  const [plateRequestRef, setPlateRequestRef] = useState('');
-
   const vehicle = vehicles.find((item) => item.name === selectedVehicle) ?? vehicles[1];
   const days = rentalDays(pickupDate, returnDate);
   const basePrice = estimatePrice(vehicle, days);
@@ -347,10 +310,6 @@ function Home() {
     setDriver((current) => ({ ...current, [key]: value }));
   }
 
-  function updatePlateRequest(key: keyof typeof plateRequest, value: string) {
-    setPlateRequest((current) => ({ ...current, [key]: value }));
-  }
-
   function toggleExtra(extraId: string) {
     setSelectedExtras((current) =>
       current.includes(extraId) ? current.filter((item) => item !== extraId) : [...current, extraId],
@@ -361,12 +320,6 @@ function Home() {
     event.preventDefault();
     const randomPart = Math.floor(10000 + Math.random() * 90000);
     setBookingRef(`CL-${new Date().getFullYear()}-${randomPart}`);
-  }
-
-  function submitPlateRequest(event: FormEvent) {
-    event.preventDefault();
-    const randomPart = Math.floor(1000 + Math.random() * 9000);
-    setPlateRequestRef(`PL-${new Date().getFullYear()}-${randomPart}`);
   }
 
   return (
@@ -383,10 +336,11 @@ function Home() {
             </span>
           </a>
           <nav className='hidden items-center gap-7 text-sm font-bold md:flex'>
-            <a href='#services' className='hover:text-ocean'>Services</a>
-            <a href='#cars' className='hover:text-ocean'>Véhicules</a>
             <a href='#booking' className='hover:text-ocean'>Réservation</a>
-            <a href='#plates' className='hover:text-ocean'>Plaques</a>
+            <a href='#cars' className='hover:text-ocean'>Véhicules</a>
+            <a href='#services' className='hover:text-ocean'>Services</a>
+            <a href='#faq' className='hover:text-ocean'>FAQ</a>
+            <a href='/plaques' className='hover:text-ocean'>Plaques</a>
           </nav>
           <a href='#booking' className='inline-flex h-10 items-center gap-2 rounded-lg bg-coral px-4 text-sm font-black text-white'>
             <CalendarCheck className='h-4 w-4' />Réserver
@@ -433,88 +387,19 @@ function Home() {
           </div>
         </section>
 
-        <section id='services' className='px-4 py-16 sm:px-6 lg:py-20'>
-          <div className='mx-auto max-w-7xl'>
-            <SectionIntro
-              eyebrow='Services inclus'
-              title='Une location pensée pour bouger facilement'
-              text='Coco Loc mise sur l’essentiel : récupérer la voiture au bon endroit, comprendre le tarif et partir sans mauvaise surprise.'
-            />
-            <div className='mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-              {serviceHighlights.map((item) => (
-                <article key={item.title} className={`${card} p-5`}>
-                  <item.icon className='h-7 w-7 text-ocean' />
-                  <h3 className='mt-4 font-display text-2xl font-black'>{item.title}</h3>
-                  <p className='mt-3 text-sm leading-6 text-muted-foreground'>{item.text}</p>
-                </article>
-              ))}
-            </div>
-            <div className='mt-6 grid gap-4 lg:grid-cols-3'>
-              {practicalOffers.map((item) => (
-                <article key={item.title} className='rounded-2xl border border-border bg-muted/45 p-5'>
-                  <div className='flex items-start gap-4'>
-                    <item.icon className='mt-1 h-6 w-6 text-coral' />
-                    <div>
-                      <h3 className='font-display text-2xl font-black'>{item.title}</h3>
-                      <p className='mt-2 text-sm leading-6 text-muted-foreground'>{item.text}</p>
-                      <p className='mt-3 text-sm font-black text-ocean'>{item.detail}</p>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id='cars' className='px-4 py-20 sm:px-6 lg:py-24'>
-          <div className='mx-auto max-w-7xl'>
-            <SectionIntro eyebrow='Flotte Coco Loc' title='Choisissez votre véhicule' text='Cinq véhicules disponibles, des tarifs lisibles et les informations utiles avant de réserver.' />
-
-            <div className='mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
-              {vehicles.map((item) => (
-                <article key={item.name} className={`${card} overflow-hidden ${selectedVehicle === item.name ? 'ring-2 ring-ocean' : ''}`}>
-                  <img src={item.image} alt={item.alt} className='h-52 w-full bg-muted object-cover' />
-                  <div className='p-5'>
-                    <div className='text-xs font-black uppercase tracking-widest text-coral'>{item.range}</div>
-                    <h3 className='mt-2 font-display text-2xl font-black'>{item.name}</h3>
-                    <div className='mt-4 grid gap-2 text-sm text-muted-foreground'>
-                      <Spec icon={User} text={item.seats} />
-                      <Spec icon={Car} text={item.gearbox} />
-                      <Spec icon={Briefcase} text={item.luggage} />
-                    </div>
-                    <div className='mt-5 flex items-end justify-between gap-3'>
-                      <div>
-                        <p className='text-xs font-bold uppercase tracking-widest text-muted-foreground'>Week-end</p>
-                        <p className='font-display text-4xl font-black text-ocean'>{item.packages.weekend}€</p>
-                        <p className='text-xs font-semibold text-muted-foreground'>7 jours : {item.packages.week}€</p>
-                      </div>
-                      <button
-                        type='button'
-                        onClick={() => {
-                          setSelectedVehicle(item.name);
-                          document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                        className='inline-flex h-11 items-center rounded-lg bg-coral px-4 text-sm font-black text-white'
-                      >
-                        Choisir
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section id='booking' className='bg-muted/45 px-4 py-20 sm:px-6 lg:py-24'>
           <div className='mx-auto max-w-7xl'>
-            <SectionIntro eyebrow='Réservation en ligne' title='Finalisez votre location' text='Sélectionnez vos dates, ajoutez vos options et confirmez votre véhicule en quelques étapes.' />
+            <SectionIntro
+              eyebrow='Réservation en ligne'
+              title='Réservez votre voiture'
+              text='Choisissez vos dates, votre véhicule et vos options pour obtenir un récapitulatif clair avant confirmation.'
+            />
 
             <div className='mt-10 grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start'>
               <aside className={`${card} overflow-hidden`}>
                 <img src={vehicle.image} alt={vehicle.alt} className='h-72 w-full bg-muted object-cover' />
                 <div className='p-6'>
-                  <p className='text-xs font-black uppercase tracking-widest text-coral'>Véhicule sélectionné</p>
+                  <p className='text-xs font-black uppercase tracking-widest text-coral'>Votre sélection</p>
                   <h2 className='mt-2 font-display text-4xl font-black'>{vehicle.name}</h2>
                   <div className='mt-5 grid gap-3 text-sm'>
                     <Summary label='Départ' value={`${pickupLocation} · ${pickupDate} · ${pickupTime}`} />
@@ -645,6 +530,83 @@ function Home() {
           </div>
         </section>
 
+        <section id='cars' className='px-4 py-20 sm:px-6 lg:py-24'>
+          <div className='mx-auto max-w-7xl'>
+            <SectionIntro eyebrow='Flotte Coco Loc' title='Choisissez votre véhicule' text='Cinq véhicules disponibles, des tarifs lisibles et les informations utiles avant de réserver.' />
+
+            <div className='mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
+              {vehicles.map((item) => (
+                <article key={item.name} className={`${card} overflow-hidden ${selectedVehicle === item.name ? 'ring-2 ring-ocean' : ''}`}>
+                  <img src={item.image} alt={item.alt} className='h-52 w-full bg-muted object-cover' />
+                  <div className='p-5'>
+                    <div className='text-xs font-black uppercase tracking-widest text-coral'>{item.range}</div>
+                    <h3 className='mt-2 font-display text-2xl font-black'>{item.name}</h3>
+                    <div className='mt-4 grid gap-2 text-sm text-muted-foreground'>
+                      <Spec icon={User} text={item.seats} />
+                      <Spec icon={Car} text={item.gearbox} />
+                      <Spec icon={Briefcase} text={item.luggage} />
+                    </div>
+                    <div className='mt-5 flex items-end justify-between gap-3'>
+                      <div>
+                        <p className='text-xs font-bold uppercase tracking-widest text-muted-foreground'>Week-end</p>
+                        <p className='font-display text-4xl font-black text-ocean'>{item.packages.weekend}€</p>
+                        <p className='text-xs font-semibold text-muted-foreground'>7 jours : {item.packages.week}€</p>
+                      </div>
+                      <button
+                        type='button'
+                        onClick={() => {
+                          setSelectedVehicle(item.name);
+                          document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className='inline-flex h-11 items-center rounded-lg bg-coral px-4 text-sm font-black text-white'
+                      >
+                        Choisir
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id='services' className='bg-card px-4 py-20 sm:px-6 lg:py-24'>
+          <div className='mx-auto max-w-7xl'>
+            <SectionIntro
+              eyebrow='Pourquoi Coco Loc'
+              title='Les services qui font la différence'
+              text='Prise en charge à l’aéroport, livraison possible, acompte et conditions de location lisibles avant le départ.'
+            />
+            <div className='mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+              {serviceHighlights.map((item) => (
+                <article key={item.title} className='rounded-2xl border border-border bg-background p-5'>
+                  <item.icon className='h-7 w-7 text-ocean' />
+                  <h3 className='mt-4 font-display text-2xl font-black'>{item.title}</h3>
+                  <p className='mt-3 text-sm leading-6 text-muted-foreground'>{item.text}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className='mt-12 border-t border-border pt-8'>
+              <p className='text-xs font-black uppercase tracking-widest text-coral'>Offres pratiques</p>
+              <div className='mt-5 grid gap-4 lg:grid-cols-3'>
+                {practicalOffers.map((item) => (
+                  <article key={item.title} className='rounded-2xl border border-border bg-muted/45 p-5'>
+                    <div className='flex items-start gap-4'>
+                      <item.icon className='mt-1 h-6 w-6 text-coral' />
+                      <div>
+                        <h3 className='font-display text-2xl font-black'>{item.title}</h3>
+                        <p className='mt-2 text-sm leading-6 text-muted-foreground'>{item.text}</p>
+                        <p className='mt-3 text-sm font-black text-ocean'>{item.detail}</p>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className='px-4 py-16 sm:px-6 lg:py-20'>
           <div className='mx-auto max-w-7xl'>
             <SectionIntro
@@ -672,7 +634,7 @@ function Home() {
           </div>
         </section>
 
-        <section className='bg-card px-4 py-16 sm:px-6 lg:py-20'>
+        <section id='faq' className='bg-muted/45 px-4 py-16 sm:px-6 lg:py-20'>
           <div className='mx-auto max-w-7xl'>
             <SectionIntro
               eyebrow='FAQ'
@@ -690,105 +652,18 @@ function Home() {
           </div>
         </section>
 
-        <section id='plates' className='bg-sea px-4 py-20 text-white sm:px-6 lg:py-24'>
-          <div className='mx-auto max-w-7xl'>
-            <div className='grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center'>
-              <img src={plaqueImg} alt='Plaques Coco Loc' className='w-full max-w-md rounded-2xl border border-white/20 object-cover shadow-glow' />
-              <div>
-                <p className='text-xs font-black uppercase tracking-widest text-white/70'>Plaques d’immatriculation</p>
-                <h2 className='mt-3 font-display text-4xl font-black sm:text-5xl'>Vente et pose de plaques 4D & 3D Topaze</h2>
-                <p className='mt-4 max-w-2xl text-white/82'>
-                  Plaques conformes à la réglementation, pose comprise sur rendez-vous et finitions disponibles pour voiture récente ou remplacement.
-                </p>
-                <div className='mt-6 grid gap-3 sm:grid-cols-3'>
-                  <PlateBenefit icon={Wrench} text='Pose comprise' />
-                  <PlateBenefit icon={FileText} text='Service homologué' />
-                  <PlateBenefit icon={Clock} text='Sur rendez-vous' />
-                </div>
-              </div>
+        <section className='bg-sea px-4 py-12 text-white sm:px-6'>
+          <div className='mx-auto flex max-w-7xl flex-col justify-between gap-5 md:flex-row md:items-center'>
+            <div>
+              <p className='text-xs font-black uppercase tracking-widest text-white/70'>Plaques d’immatriculation</p>
+              <h2 className='mt-2 font-display text-3xl font-black'>Plaques 4D & 3D Topaze</h2>
+              <p className='mt-2 max-w-2xl text-sm leading-6 text-white/78'>
+                Consultez les tarifs et demandez un rendez-vous pour la vente et pose de plaques 4D ou 3D Topaze.
+              </p>
             </div>
-
-            <div className='mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4'>
-              {plateOffers.map((offer) => (
-                <article key={offer.title} className='rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-sm'>
-                  <h3 className='font-display text-2xl font-black'>{offer.title}</h3>
-                  <p className='mt-3 font-display text-5xl font-black text-sun'>{offer.price}€</p>
-                  <div className='mt-5 grid gap-2 text-sm text-white/86'>
-                    {offer.details.map((detail) => (
-                      <div key={detail} className='flex items-center gap-2'>
-                        <Check className='h-4 w-4 text-sun' />
-                        <span>{detail}</span>
-                      </div>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            <div className='mt-10 grid gap-6 lg:grid-cols-[0.8fr_1.2fr]'>
-              <div className='rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm'>
-                <h3 className='font-display text-3xl font-black'>Préparer la pose</h3>
-                <div className='mt-5 grid gap-4 text-sm text-white/86'>
-                  <div className='flex gap-3'>
-                    <MapPin className='mt-0.5 h-5 w-5 text-sun' />
-                    <p>Pose sur rendez-vous, avec possibilité de préciser le lieu souhaité dans la demande.</p>
-                  </div>
-                  <div className='flex gap-3'>
-                    <FileText className='mt-0.5 h-5 w-5 text-sun' />
-                    <p>Indiquez votre immatriculation et la finition voulue pour préparer la prestation.</p>
-                  </div>
-                  <div className='flex gap-3'>
-                    <Phone className='mt-0.5 h-5 w-5 text-sun' />
-                    <p>Contact direct au 06 91 27 87 94 pour confirmer l’horaire de pose.</p>
-                  </div>
-                </div>
-              </div>
-
-              <form onSubmit={submitPlateRequest} className='rounded-2xl border border-border bg-card p-5 text-foreground shadow-soft sm:p-7'>
-                <div className='flex items-center gap-3'>
-                  <Wrench className='h-6 w-6 text-ocean' />
-                  <h3 className='font-display text-3xl font-black'>Demande plaques</h3>
-                </div>
-                <div className='mt-5 grid gap-4 sm:grid-cols-2'>
-                  <label className='text-sm font-bold'>
-                    Nom
-                    <input className={field} value={plateRequest.name} onChange={(event) => updatePlateRequest('name', event.target.value)} required />
-                  </label>
-                  <label className='text-sm font-bold'>
-                    Téléphone
-                    <input className={field} type='tel' value={plateRequest.phone} onChange={(event) => updatePlateRequest('phone', event.target.value)} required />
-                  </label>
-                  <label className='text-sm font-bold'>
-                    Prestation
-                    <select className={field} value={plateRequest.offer} onChange={(event) => updatePlateRequest('offer', event.target.value)}>
-                      {plateOffers.map((offer) => <option key={offer.title}>{offer.title}</option>)}
-                    </select>
-                  </label>
-                  <label className='text-sm font-bold'>
-                    Immatriculation
-                    <input className={field} value={plateRequest.plateNumber} onChange={(event) => updatePlateRequest('plateNumber', event.target.value)} placeholder='Ex : AB-123-CD' />
-                  </label>
-                </div>
-                <label className='mt-4 block text-sm font-bold'>
-                  Message
-                  <textarea
-                    className='mt-2 min-h-24 w-full rounded-lg border border-input bg-background px-3 py-3 text-sm outline-none transition focus:border-ocean focus:ring-2 focus:ring-ocean/15'
-                    value={plateRequest.note}
-                    onChange={(event) => updatePlateRequest('note', event.target.value)}
-                    placeholder='Jour souhaité, lieu de pose, précision sur les plaques...'
-                  />
-                </label>
-                <button type='submit' className='mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-ocean text-base font-black text-white'>
-                  <CalendarCheck className='h-5 w-5' />Envoyer ma demande
-                </button>
-                {plateRequestRef && (
-                  <div role='status' className='mt-5 rounded-xl border border-palm/30 bg-palm/10 p-5 text-sm'>
-                    <p className='font-black'>Demande enregistrée</p>
-                    <p className='mt-1 text-muted-foreground'>Référence {plateRequestRef}. Coco Loc revient vers vous pour confirmer le rendez-vous.</p>
-                  </div>
-                )}
-              </form>
-            </div>
+            <a href='/plaques' className='inline-flex h-12 items-center justify-center rounded-lg bg-sun px-5 text-sm font-black text-sea'>
+              Voir les plaques
+            </a>
           </div>
         </section>
       </main>
@@ -800,6 +675,7 @@ function Home() {
             <a className='inline-flex items-center gap-2' href='tel:0691278794'><Phone className='h-4 w-4' />06 91 27 87 94</a>
             <a className='inline-flex items-center gap-2' href='mailto:cocoloc97-1@outlook.fr'><Mail className='h-4 w-4' />cocoloc97-1@outlook.fr</a>
             <a href='https://instagram.com/coco.loc971'>@coco.loc971</a>
+            <a href='/plaques'>Plaques 4D / 3D</a>
           </div>
         </div>
       </footer>
@@ -845,15 +721,6 @@ function Spec({ icon: Icon, text }: { icon: typeof Car; text: string }) {
     <div className='flex items-center gap-2'>
       <Icon className='h-4 w-4 text-ocean' />
       <span>{text}</span>
-    </div>
-  );
-}
-
-function PlateBenefit({ icon: Icon, text }: { icon: typeof Car; text: string }) {
-  return (
-    <div className='flex items-center gap-3 rounded-lg border border-white/20 bg-white/10 px-4 py-3'>
-      <Icon className='h-5 w-5 text-sun' />
-      <span className='text-sm font-black'>{text}</span>
     </div>
   );
 }
