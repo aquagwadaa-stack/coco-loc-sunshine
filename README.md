@@ -12,4 +12,4 @@ La page présente maintenant un parcours de location complet, proche d'un site d
 - Planning de disponibilité, options, conducteur, paiement et confirmation de réservation.
 - Section plaques conservée avec un wording public et professionnel.
 
-Dernière synchro demandée pour Lovable : remplacement du parcours WhatsApp par une réservation en ligne propre et publiable.
+Dernière synchro demandée pour Lovable : réservation en ligne propre, complète et publiable.
