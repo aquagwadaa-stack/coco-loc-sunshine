@@ -62,6 +62,17 @@ const vehicles = [
     weekly: 130,
   },
   {
+    name: 'Twingo 3',
+    range: 'Économique',
+    image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Renault%20Twingo%20III%20in%20Aardenburg.jpg?width=1200',
+    alt: 'Renault Twingo 3',
+    seats: '4 places',
+    gearbox: 'Manuelle',
+    luggage: '2 bagages',
+    price: 60,
+    weekly: 130,
+  },
+  {
     name: 'Clio 4',
     range: 'Compacte',
     image: 'https://commons.wikimedia.org/wiki/Special:FilePath/Renault%20Clio-IV%20Black.JPG?width=1200',
@@ -217,9 +228,9 @@ function Home() {
 
         <section id='cars' className='px-4 py-20 sm:px-6 lg:py-24'>
           <div className='mx-auto max-w-7xl'>
-            <SectionIntro eyebrow='Nos voitures' title='Choisissez simplement votre véhicule' text='Une flotte courte, lisible, avec les prix principaux affichés sans faire chercher.' />
+            <SectionIntro eyebrow='Nos voitures' title='Choisissez simplement votre véhicule' text='Cinq véhicules, une lecture claire, avec les prix principaux affichés sans faire chercher.' />
 
-            <div className='mt-10 grid gap-6 lg:grid-cols-4'>
+            <div className='mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
               {vehicles.map((item) => (
                 <article key={item.name} className={`${card} overflow-hidden ${selectedVehicle === item.name ? 'ring-2 ring-ocean' : ''}`}>
                   <img src={item.image} alt={item.alt} className='h-52 w-full bg-muted object-cover' />
