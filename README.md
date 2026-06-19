@@ -4,11 +4,11 @@ Site Coco Loc 971 pour la location de voitures en Guadeloupe et les services de 
 
 ## Reservation
 
-La page est maintenant presentee comme un vrai site de location de voiture :
+La page est maintenant plus simple et plus proche d'un vrai site de location de voiture :
 
-- Moteur de recherche avec lieux, dates, heures, categorie et code promo.
-- Vehicules disponibles avec tarifs indicatifs calcules par pack.
-- Parcours de reservation avec conducteur, paiement, confirmation, options et recapitulatif.
-- Service plaques conserve comme option additionnelle.
+- Premier ecran centre sur l'image de marque Coco Loc.
+- Parcours plus calme : dates, lieu, choix de voiture, demande WhatsApp.
+- Cartes vehicules avec photos reelles de Fiat Panda, Clio 4, Clio 5 et Renault Captur.
+- Service plaques conserve en section secondaire.
 
-Derniere synchro demandee pour Lovable : refonte type site de location de voiture, avec hero vehicule et reservation complete.
+Derniere synchro demandee pour Lovable : version simplifiee, marque d'abord, vraies photos voitures, moins d'options visibles.
