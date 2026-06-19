@@ -170,6 +170,25 @@ const practicalOffers = [
   },
 ];
 
+const serviceAccentClasses = [
+  { card: 'border-ocean/20 bg-ocean/5', icon: 'bg-ocean/10 text-ocean' },
+  { card: 'border-palm/20 bg-palm/5', icon: 'bg-palm/10 text-palm' },
+  { card: 'border-coral/20 bg-coral/5', icon: 'bg-coral/10 text-coral' },
+  { card: 'border-sun/35 bg-sun/10', icon: 'bg-sun/25 text-coral' },
+];
+
+const offerAccentClasses = [
+  { card: 'border-coral/25 bg-coral/5', icon: 'bg-coral/10 text-coral' },
+  { card: 'border-ocean/20 bg-ocean/5', icon: 'bg-ocean/10 text-ocean' },
+  { card: 'border-palm/20 bg-palm/5', icon: 'bg-palm/10 text-palm' },
+];
+
+const includedAccentClasses = [
+  'bg-ocean/10 text-ocean',
+  'bg-palm/10 text-palm',
+  'bg-coral/10 text-coral',
+];
+
 const bookingSteps = [
   {
     icon: CalendarCheck,
@@ -354,7 +373,7 @@ function Home() {
         <div className='absolute inset-0 bg-gradient-to-r from-background via-background/84 to-background/10' />
         <div className='relative mx-auto flex min-h-[calc(92vh-5rem)] max-w-7xl items-center px-4 py-16 sm:px-6'>
           <div className='max-w-2xl'>
-            <p className='inline-flex rounded-full border border-border bg-card/85 px-4 py-2 text-xs font-black uppercase tracking-widest text-ocean shadow-soft'>
+            <p className='inline-flex rounded-full border border-coral/20 bg-sand/85 px-4 py-2 text-xs font-black uppercase tracking-widest text-ocean shadow-soft'>
               Location de voitures en Guadeloupe
             </p>
             <h1 className='mt-6 font-display text-6xl font-black leading-[0.94] tracking-tight sm:text-8xl'>
@@ -367,7 +386,7 @@ function Home() {
               <a href='#booking' className='inline-flex h-12 items-center gap-2 rounded-lg bg-ocean px-5 text-sm font-black text-white shadow-soft'>
                 Lancer la réservation <ChevronRight className='h-4 w-4' />
               </a>
-              <a href='#cars' className='inline-flex h-12 items-center rounded-lg border border-border bg-card/85 px-5 text-sm font-black'>
+              <a href='#cars' className='inline-flex h-12 items-center rounded-lg border border-coral/25 bg-sand/85 px-5 text-sm font-black'>
                 Voir la flotte
               </a>
             </div>
@@ -376,13 +395,13 @@ function Home() {
       </section>
 
       <main>
-        <section className='border-y border-border bg-card px-4 py-6 sm:px-6'>
+        <section className='border-y border-border bg-sand/55 px-4 py-6 sm:px-6'>
           <div className='mx-auto grid max-w-7xl gap-4 md:grid-cols-[1fr_1fr_1.15fr_1.15fr_auto] md:items-end'>
             <DateField label='Départ' value={pickupDate} onChange={setPickupDate} />
             <DateField label='Retour' value={returnDate} onChange={setReturnDate} />
             <LocationField label='Prise en charge' value={pickupLocation} onChange={setPickupLocation} />
             <LocationField label='Restitution' value={returnLocation} onChange={setReturnLocation} />
-            <a href='#booking' className='inline-flex h-12 items-center justify-center rounded-lg bg-foreground px-5 text-sm font-black text-background'>
+            <a href='#booking' className='inline-flex h-12 items-center justify-center rounded-lg bg-coral px-5 text-sm font-black text-white shadow-glow'>
               Rechercher
             </a>
           </div>
@@ -395,8 +414,9 @@ function Home() {
 
             <div className='mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'>
               {vehicles.map((item) => (
-                <article key={item.name} className={`${card} overflow-hidden ${selectedVehicle === item.name ? 'ring-2 ring-ocean' : ''}`}>
+                <article key={item.name} className={`${card} group overflow-hidden transition duration-300 hover:-translate-y-1 ${selectedVehicle === item.name ? 'ring-2 ring-ocean' : ''}`}>
                   <img src={item.image} alt={item.alt} className='h-52 w-full bg-muted object-cover' />
+                  <div className='h-1 bg-madras-line opacity-65' aria-hidden />
                   <div className='p-5'>
                     <div className='text-xs font-black uppercase tracking-widest text-coral'>{item.range}</div>
                     <h3 className='mt-2 font-display text-2xl font-black'>{item.name}</h3>
@@ -429,7 +449,7 @@ function Home() {
           </div>
         </section>
 
-        <section id='booking' className='bg-muted/45 px-4 py-20 sm:px-6 lg:py-24'>
+        <section id='booking' className='bg-sand/35 px-4 py-20 sm:px-6 lg:py-24'>
           <div className='mx-auto max-w-7xl'>
             <SectionIntro
               eyebrow='Réservation en ligne'
@@ -440,6 +460,7 @@ function Home() {
             <div className='mt-10 grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start'>
               <aside className={`${card} overflow-hidden`}>
                 <img src={vehicle.image} alt={vehicle.alt} className='h-72 w-full bg-muted object-cover' />
+                <div className='h-1 bg-madras-line opacity-65' aria-hidden />
                 <div className='p-6'>
                   <p className='text-xs font-black uppercase tracking-widest text-coral'>Votre sélection</p>
                   <h2 className='mt-2 font-display text-4xl font-black'>{vehicle.name}</h2>
@@ -485,7 +506,7 @@ function Home() {
                         className={`rounded-lg border p-4 text-left transition ${
                           selectedExtras.includes(extra.id)
                             ? 'border-ocean bg-ocean text-white'
-                            : 'border-border bg-background hover:border-ocean/60'
+                            : 'border-border bg-background hover:border-coral/50 hover:bg-sand/50'
                         }`}
                       >
                         <extra.icon className='h-5 w-5' />
@@ -541,7 +562,7 @@ function Home() {
                   </label>
                 </div>
 
-                <div className='mt-7 rounded-xl border border-border bg-background p-5'>
+                <div className='mt-7 rounded-xl border border-coral/15 bg-sand/35 p-5'>
                   <div className='grid gap-3 text-sm'>
                     <Summary label='Forfait' value={`${packageLabel(days)} · ${basePrice}€`} />
                     <Summary label='Options' value={`${extrasTotal}€`} />
@@ -580,9 +601,11 @@ function Home() {
               text='Prise en charge à l’aéroport, livraison possible, acompte et conditions de location lisibles avant le départ.'
             />
             <div className='mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-              {serviceHighlights.map((item) => (
-                <article key={item.title} className='rounded-2xl border border-border bg-background p-5'>
-                  <item.icon className='h-7 w-7 text-ocean' />
+              {serviceHighlights.map((item, index) => (
+                <article key={item.title} className={`rounded-2xl border p-5 ${serviceAccentClasses[index % serviceAccentClasses.length].card}`}>
+                  <span className={`grid h-11 w-11 place-items-center rounded-xl ${serviceAccentClasses[index % serviceAccentClasses.length].icon}`}>
+                    <item.icon className='h-6 w-6' />
+                  </span>
                   <h3 className='mt-4 font-display text-2xl font-black'>{item.title}</h3>
                   <p className='mt-3 text-sm leading-6 text-muted-foreground'>{item.text}</p>
                 </article>
@@ -592,10 +615,12 @@ function Home() {
             <div className='mt-12 border-t border-border pt-8'>
               <p className='text-xs font-black uppercase tracking-widest text-coral'>Offres pratiques</p>
               <div className='mt-5 grid gap-4 lg:grid-cols-3'>
-                {practicalOffers.map((item) => (
-                  <article key={item.title} className='rounded-2xl border border-border bg-muted/45 p-5'>
+                {practicalOffers.map((item, index) => (
+                  <article key={item.title} className={`rounded-2xl border p-5 ${offerAccentClasses[index % offerAccentClasses.length].card}`}>
                     <div className='flex items-start gap-4'>
-                      <item.icon className='mt-1 h-6 w-6 text-coral' />
+                      <span className={`mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-xl ${offerAccentClasses[index % offerAccentClasses.length].icon}`}>
+                        <item.icon className='h-5 w-5' />
+                      </span>
                       <div>
                         <h3 className='font-display text-2xl font-black'>{item.title}</h3>
                         <p className='mt-2 text-sm leading-6 text-muted-foreground'>{item.text}</p>
@@ -609,7 +634,7 @@ function Home() {
           </div>
         </section>
 
-        <section className='px-4 py-16 sm:px-6 lg:py-20'>
+        <section className='bg-background px-4 py-16 sm:px-6 lg:py-20'>
           <div className='mx-auto max-w-7xl'>
             <SectionIntro
               eyebrow='Déroulé'
@@ -625,10 +650,12 @@ function Home() {
                 </article>
               ))}
             </div>
-            <div className='mt-8 grid gap-3 rounded-2xl border border-border bg-card p-4 sm:grid-cols-3'>
-              {included.map((item) => (
+            <div className='mt-8 grid gap-3 rounded-2xl border border-border bg-sand/35 p-4 sm:grid-cols-3'>
+              {included.map((item, index) => (
                 <div key={item.title} className='flex items-center gap-3 px-2 py-3'>
-                  <item.icon className='h-6 w-6 text-palm' />
+                  <span className={`grid h-10 w-10 place-items-center rounded-xl ${includedAccentClasses[index % includedAccentClasses.length]}`}>
+                    <item.icon className='h-5 w-5' />
+                  </span>
                   <p className='font-black'>{item.title}</p>
                 </div>
               ))}
@@ -636,7 +663,7 @@ function Home() {
           </div>
         </section>
 
-        <section id='faq' className='bg-muted/45 px-4 py-16 sm:px-6 lg:py-20'>
+        <section id='faq' className='bg-sand/35 px-4 py-16 sm:px-6 lg:py-20'>
           <div className='mx-auto max-w-7xl'>
             <SectionIntro
               eyebrow='FAQ'
